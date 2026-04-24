@@ -1,0 +1,20 @@
+{
+  "merged_characters": 15001,
+  "source_counts": {
+    "3500": 3500,
+    "7000": 7000,
+    "corpus": 14975
+  },
+  "top_600_characters": 600,
+  "lessons": 12,
+  "lesson_terms": 124,
+  "outputs": [
+    "data/processed/characters_master.csv",
+    "data/processed/learning_characters.csv",
+    "data/processed/lesson_vocabulary.csv",
+    "content/lessons.json",
+    "pdf/Chinese_Character_Content_Study_Pack.pdf",
+    "pdf/Master_Character_List_Top_600.pdf",
+    "docs/index.html"
+  ]
+}

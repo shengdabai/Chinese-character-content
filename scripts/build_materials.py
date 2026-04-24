@@ -1,0 +1,1030 @@
+from __future__ import annotations
+
+import csv
+import gzip
+import html
+import json
+import re
+import shutil
+import urllib.request
+from dataclasses import dataclass
+from pathlib import Path
+
+import pandas as pd
+from pypinyin import Style, lazy_pinyin
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.units import mm
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+from reportlab.pdfbase import pdfmetrics
+from reportlab.platypus import (
+    PageBreak,
+    Paragraph,
+    SimpleDocTemplate,
+    Spacer,
+    Table,
+    TableStyle,
+)
+
+
+ROOT = Path(__file__).resolve().parents[1]
+RAW = ROOT / "data" / "raw"
+PROCESSED = ROOT / "data" / "processed"
+CONTENT = ROOT / "content"
+PDF = ROOT / "pdf"
+SITE = ROOT / "docs"
+
+CC_CEDICT_URL = "https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.txt.gz"
+
+
+@dataclass(frozen=True)
+class Term:
+    text: str
+    meaning: str
+
+
+LESSONS = [
+    {
+        "level": "Zero Beginner",
+        "title": "Greetings and Names",
+        "goal": "Greet people and introduce your name.",
+        "terms": [
+            Term("你好", "hello"),
+            Term("我", "I; me"),
+            Term("你", "you"),
+            Term("叫", "to be called"),
+            Term("什么", "what"),
+            Term("名字", "name"),
+            Term("是", "to be"),
+            Term("老师", "teacher"),
+            Term("学生", "student"),
+            Term("谢谢", "thank you"),
+        ],
+        "sentences": [
+            ("你好，我叫 David。", "Hello, my name is David."),
+            ("你叫什么名字？", "What is your name?"),
+            ("我是学生。", "I am a student."),
+        ],
+        "speaking_task": "Introduce yourself with: 你好，我叫 __。我是 __。",
+    },
+    {
+        "level": "Zero Beginner",
+        "title": "Numbers and Phone Numbers",
+        "goal": "Say numbers and read a phone number aloud.",
+        "terms": [
+            Term("一", "one"),
+            Term("二", "two"),
+            Term("三", "three"),
+            Term("四", "four"),
+            Term("五", "five"),
+            Term("六", "six"),
+            Term("七", "seven"),
+            Term("八", "eight"),
+            Term("九", "nine"),
+            Term("十", "ten"),
+            Term("电话", "phone"),
+            Term("号码", "number"),
+        ],
+        "sentences": [
+            ("我的电话号码是 13800138000。", "My phone number is 13800138000."),
+            ("请再说一遍。", "Please say it one more time."),
+        ],
+        "speaking_task": "Read your phone number slowly in Chinese.",
+    },
+    {
+        "level": "Zero Beginner",
+        "title": "Countries and Languages",
+        "goal": "Say where you are from and what languages you speak.",
+        "terms": [
+            Term("中国", "China"),
+            Term("美国", "United States"),
+            Term("英国", "United Kingdom"),
+            Term("西班牙", "Spain"),
+            Term("人", "person"),
+            Term("中文", "Chinese language"),
+            Term("英文", "English language"),
+            Term("说", "to speak"),
+            Term("会", "can; know how to"),
+        ],
+        "sentences": [
+            ("我是美国人。", "I am American."),
+            ("我会说一点中文。", "I can speak a little Chinese."),
+            ("你会说英文吗？", "Can you speak English?"),
+        ],
+        "speaking_task": "Say your country and one language you speak.",
+    },
+    {
+        "level": "HSK1 Core",
+        "title": "Family and People",
+        "goal": "Talk about family members.",
+        "terms": [
+            Term("家", "home; family"),
+            Term("爸爸", "father"),
+            Term("妈妈", "mother"),
+            Term("儿子", "son"),
+            Term("女儿", "daughter"),
+            Term("朋友", "friend"),
+            Term("同学", "classmate"),
+            Term("医生", "doctor"),
+            Term("工作", "work; job"),
+            Term("忙", "busy"),
+        ],
+        "sentences": [
+            ("我家有三个人。", "There are three people in my family."),
+            ("我妈妈是医生。", "My mother is a doctor."),
+            ("你今天忙吗？", "Are you busy today?"),
+        ],
+        "speaking_task": "Describe two people in your family.",
+    },
+    {
+        "level": "HSK1 Core",
+        "title": "Time and Daily Schedule",
+        "goal": "Say basic time and daily actions.",
+        "terms": [
+            Term("今天", "today"),
+            Term("明天", "tomorrow"),
+            Term("昨天", "yesterday"),
+            Term("现在", "now"),
+            Term("上午", "morning"),
+            Term("下午", "afternoon"),
+            Term("晚上", "evening"),
+            Term("点", "o'clock"),
+            Term("去", "to go"),
+            Term("回", "to return"),
+            Term("睡觉", "to sleep"),
+        ],
+        "sentences": [
+            ("现在几点？", "What time is it now?"),
+            ("我明天上午去学校。", "I will go to school tomorrow morning."),
+            ("我晚上十一点睡觉。", "I sleep at 11 p.m."),
+        ],
+        "speaking_task": "Say three things you do today.",
+    },
+    {
+        "level": "HSK2 Expansion",
+        "title": "Eating and Ordering",
+        "goal": "Order simple food and drinks.",
+        "terms": [
+            Term("吃", "to eat"),
+            Term("喝", "to drink"),
+            Term("水", "water"),
+            Term("茶", "tea"),
+            Term("咖啡", "coffee"),
+            Term("米饭", "rice"),
+            Term("面条", "noodles"),
+            Term("菜单", "menu"),
+            Term("服务员", "server"),
+            Term("买单", "to pay the bill"),
+            Term("好吃", "tasty"),
+        ],
+        "sentences": [
+            ("我要一杯茶。", "I would like a cup of tea."),
+            ("这个菜很好吃。", "This dish is tasty."),
+            ("服务员，买单。", "Server, the bill please."),
+        ],
+        "speaking_task": "Order one drink and one food item.",
+    },
+    {
+        "level": "HSK2 Expansion",
+        "title": "Travel and Directions",
+        "goal": "Ask where a place is and how to get there.",
+        "terms": [
+            Term("机场", "airport"),
+            Term("酒店", "hotel"),
+            Term("出租车", "taxi"),
+            Term("地铁", "subway"),
+            Term("车站", "station"),
+            Term("地址", "address"),
+            Term("左边", "left side"),
+            Term("右边", "right side"),
+            Term("前面", "front"),
+            Term("后面", "back"),
+            Term("怎么走", "how to get there"),
+        ],
+        "sentences": [
+            ("酒店在哪里？", "Where is the hotel?"),
+            ("请问，地铁站怎么走？", "Excuse me, how do I get to the subway station?"),
+            ("机场在前面。", "The airport is ahead."),
+        ],
+        "speaking_task": "Ask for directions to a hotel or subway station.",
+    },
+    {
+        "level": "HSK3 Expansion",
+        "title": "Opinions and Reasons",
+        "goal": "Give a simple opinion and reason.",
+        "terms": [
+            Term("觉得", "to think; to feel"),
+            Term("因为", "because"),
+            Term("所以", "so"),
+            Term("但是", "but"),
+            Term("可能", "maybe; possible"),
+            Term("重要", "important"),
+            Term("问题", "problem; question"),
+            Term("办法", "method; solution"),
+            Term("容易", "easy"),
+            Term("难", "difficult"),
+        ],
+        "sentences": [
+            ("我觉得中文很有意思。", "I think Chinese is interesting."),
+            ("因为今天很忙，所以我不能去。", "Because I am busy today, I cannot go."),
+            ("这个问题不难。", "This problem is not difficult."),
+        ],
+        "speaking_task": "Say one opinion and explain why.",
+    },
+    {
+        "level": "HSK3 Expansion",
+        "title": "Plans and Changes",
+        "goal": "Talk about plans, changes, and completion.",
+        "terms": [
+            Term("计划", "plan"),
+            Term("准备", "to prepare; plan to"),
+            Term("已经", "already"),
+            Term("还", "still; yet"),
+            Term("完成", "to complete"),
+            Term("改变", "to change"),
+            Term("开始", "to start"),
+            Term("结束", "to end"),
+            Term("以前", "before"),
+            Term("以后", "after; later"),
+        ],
+        "sentences": [
+            ("我准备下个月去中国。", "I plan to go to China next month."),
+            ("会议已经开始了。", "The meeting has already started."),
+            ("我们需要改变计划。", "We need to change the plan."),
+        ],
+        "speaking_task": "Describe one plan for next month.",
+    },
+    {
+        "level": "Business Starter",
+        "title": "Introducing Your Company",
+        "goal": "Introduce your company, role, and department.",
+        "terms": [
+            Term("公司", "company"),
+            Term("部门", "department"),
+            Term("职位", "position"),
+            Term("经理", "manager"),
+            Term("客户", "client"),
+            Term("产品", "product"),
+            Term("市场", "market"),
+            Term("销售", "sales"),
+            Term("负责", "to be responsible for"),
+            Term("合作", "cooperation"),
+        ],
+        "sentences": [
+            ("我在一家美国公司工作。", "I work at an American company."),
+            ("我是销售经理。", "I am a sales manager."),
+            ("我负责中国市场。", "I am responsible for the China market."),
+        ],
+        "speaking_task": "Introduce your company and your role in three sentences.",
+    },
+    {
+        "level": "Business Starter",
+        "title": "Meetings and Follow-up",
+        "goal": "Handle basic meeting language.",
+        "terms": [
+            Term("会议", "meeting"),
+            Term("开会", "to have a meeting"),
+            Term("时间", "time"),
+            Term("地点", "place"),
+            Term("议程", "agenda"),
+            Term("确认", "to confirm"),
+            Term("安排", "to arrange"),
+            Term("资料", "materials"),
+            Term("稍后", "later"),
+            Term("回复", "to reply"),
+        ],
+        "sentences": [
+            ("我们明天上午十点开会。", "We will have a meeting tomorrow at 10 a.m."),
+            ("请确认会议时间。", "Please confirm the meeting time."),
+            ("我稍后回复你。", "I will reply to you later."),
+        ],
+        "speaking_task": "Confirm a meeting time and say you will reply later.",
+    },
+    {
+        "level": "Business Starter",
+        "title": "Prices and Payment",
+        "goal": "Ask about price, discount, and payment.",
+        "terms": [
+            Term("价格", "price"),
+            Term("多少钱", "how much money"),
+            Term("折扣", "discount"),
+            Term("合同", "contract"),
+            Term("付款", "payment"),
+            Term("发票", "invoice"),
+            Term("预算", "budget"),
+            Term("成本", "cost"),
+            Term("可以", "can; may"),
+            Term("合适", "suitable"),
+        ],
+        "sentences": [
+            ("这个价格合适吗？", "Is this price suitable?"),
+            ("可以有折扣吗？", "Can there be a discount?"),
+            ("请把发票发给我。", "Please send me the invoice."),
+        ],
+        "speaking_task": "Ask for the price and one possible discount.",
+    },
+]
+
+
+def ensure_dirs() -> None:
+    for path in [PROCESSED, CONTENT, PDF, SITE, SITE / "assets"]:
+        path.mkdir(parents=True, exist_ok=True)
+
+
+def only_cjk(value: object) -> str | None:
+    if not isinstance(value, str):
+        return None
+    chars = re.findall(r"[\u4e00-\u9fff]", value)
+    if len(chars) == 1:
+        return chars[0]
+    return None
+
+
+def read_source_data() -> pd.DataFrame:
+    df_3500 = pd.read_excel(RAW / "3500常用汉字.xls")
+    df_3500["character"] = df_3500["hz"].map(only_cjk)
+    df_3500 = df_3500.dropna(subset=["character"]).reset_index(drop=True)
+    df_3500["rank_3500"] = df_3500.index + 1
+
+    df_7000 = pd.read_excel(
+        RAW / "7000通用汉字.xls",
+        engine="xlrd",
+        engine_kwargs={"encoding_override": "cp936"},
+    )
+    df_7000["character"] = df_7000["hz"].map(only_cjk)
+    df_7000 = df_7000.dropna(subset=["character"]).reset_index(drop=True)
+    df_7000["rank_7000"] = df_7000["xh"]
+
+    df_corpus = pd.read_excel(
+        RAW / "Chinese character list from 2.5 billion words corpus ordered by frequency.xlsx"
+    )
+    df_corpus = df_corpus.rename(
+        columns={
+            "\xa0serial number": "frequency_rank",
+            "character": "character",
+            "token": "token",
+            "ferquency(per million)": "frequency_per_million",
+            "total coverage rate(%)": "coverage_rate_pct",
+        }
+    )
+    df_corpus["character"] = df_corpus["character"].map(only_cjk)
+    df_corpus = df_corpus.dropna(subset=["character"])
+
+    merged = pd.DataFrame({"character": sorted(set(df_3500["character"]) | set(df_7000["character"]) | set(df_corpus["character"]))})
+    merged = merged.merge(df_3500[["character", "rank_3500"]], on="character", how="left")
+    merged = merged.merge(df_7000[["character", "rank_7000"]], on="character", how="left")
+    merged = merged.merge(
+        df_corpus[
+            [
+                "character",
+                "frequency_rank",
+                "token",
+                "frequency_per_million",
+                "coverage_rate_pct",
+            ]
+        ],
+        on="character",
+        how="left",
+    )
+    merged["in_3500"] = merged["rank_3500"].notna()
+    merged["in_7000"] = merged["rank_7000"].notna()
+    merged["in_corpus"] = merged["frequency_rank"].notna()
+    merged = merged.sort_values(
+        by=["frequency_rank", "rank_3500", "rank_7000", "character"],
+        na_position="last",
+    ).reset_index(drop=True)
+    return merged
+
+
+def download_cedict() -> Path | None:
+    gz_path = RAW / "cedict_1_0_ts_utf-8_mdbg.txt.gz"
+    txt_path = RAW / "cedict_ts.u8"
+    if txt_path.exists():
+        return txt_path
+    try:
+        print("Downloading CC-CEDICT definitions...")
+        urllib.request.urlretrieve(CC_CEDICT_URL, gz_path)
+        with gzip.open(gz_path, "rb") as src, txt_path.open("wb") as dst:
+            dst.write(src.read())
+        return txt_path
+    except Exception as exc:
+        print(f"CC-CEDICT download skipped: {exc}")
+        return None
+
+
+def load_cedict() -> tuple[dict[str, str], dict[str, str]]:
+    path = download_cedict()
+    pinyin_map: dict[str, str] = {}
+    definition_map: dict[str, str] = {}
+    if not path:
+        return pinyin_map, definition_map
+
+    line_re = re.compile(r"^(\S+)\s+(\S+)\s+\[([^\]]+)\]\s+/(.+)/$")
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            if line.startswith("#"):
+                continue
+            match = line_re.match(line.strip())
+            if not match:
+                continue
+            _trad, simplified, pinyin, definitions = match.groups()
+            clean_defs = "; ".join(
+                part for part in definitions.split("/") if part and "variant of" not in part.lower()
+            )
+            if not clean_defs:
+                continue
+            if simplified not in definition_map:
+                definition_map[simplified] = clean_defs
+                pinyin_map[simplified] = pinyin
+    return pinyin_map, definition_map
+
+
+def pinyin_for(text: str, cedict_pinyin: dict[str, str] | None = None) -> str:
+    return sentence_pinyin(text)
+
+
+def sentence_pinyin(text: str) -> str:
+    chunks: list[str] = []
+    buffer: list[str] = []
+    ascii_buffer: list[str] = []
+
+    def flush_buffer() -> None:
+        if buffer:
+            chunks.append(" ".join(lazy_pinyin("".join(buffer), style=Style.TONE)))
+            buffer.clear()
+
+    def flush_ascii() -> None:
+        if ascii_buffer:
+            chunks.append("".join(ascii_buffer))
+            ascii_buffer.clear()
+
+    punctuation = {
+        "，": ",",
+        "。": ".",
+        "？": "?",
+        "！": "!",
+        "；": ";",
+        "：": ":",
+        "、": ",",
+    }
+    for char in text:
+        if re.match(r"[\u4e00-\u9fff]", char):
+            flush_ascii()
+            buffer.append(char)
+            continue
+        flush_buffer()
+        if char in punctuation:
+            flush_ascii()
+            chunks.append(punctuation[char])
+        elif re.match(r"[A-Za-z0-9_-]", char):
+            ascii_buffer.append(char)
+        elif char.strip():
+            flush_ascii()
+            chunks.append(char)
+        else:
+            flush_ascii()
+    flush_buffer()
+    flush_ascii()
+
+    output = " ".join(chunks)
+    output = re.sub(r"\s+([,.?!;:])", r"\1", output)
+    output = re.sub(r"([,.?!;:])(?=\S)", r"\1 ", output)
+    return output.strip()
+
+
+def assign_band(rank: float | int | None) -> str:
+    if pd.isna(rank):
+        return "Corpus/General Extension"
+    rank_int = int(rank)
+    if rank_int <= 100:
+        return "Zero Beginner"
+    if rank_int <= 150:
+        return "HSK1 Core"
+    if rank_int <= 300:
+        return "HSK2 Expansion"
+    if rank_int <= 600:
+        return "HSK3 Expansion"
+    if rank_int <= 3500:
+        return "General 3500"
+    if rank_int <= 7000:
+        return "General 7000"
+    return "Corpus/General Extension"
+
+
+def enrich_characters(df: pd.DataFrame, cedict_pinyin: dict[str, str], cedict_defs: dict[str, str]) -> pd.DataFrame:
+    df = df.copy()
+    df["pinyin"] = df["character"].map(lambda char: pinyin_for(char, cedict_pinyin))
+    df["definition_en"] = df["character"].map(lambda char: cedict_defs.get(char, ""))
+    df["learning_band"] = df["frequency_rank"].map(assign_band)
+    df["source"] = df.apply(
+        lambda row: ", ".join(
+            label
+            for label, included in [
+                ("3500", row["in_3500"]),
+                ("7000", row["in_7000"]),
+                ("corpus", row["in_corpus"]),
+            ]
+            if included
+        ),
+        axis=1,
+    )
+    columns = [
+        "character",
+        "pinyin",
+        "definition_en",
+        "learning_band",
+        "frequency_rank",
+        "token",
+        "frequency_per_million",
+        "coverage_rate_pct",
+        "rank_3500",
+        "rank_7000",
+        "in_3500",
+        "in_7000",
+        "in_corpus",
+        "source",
+    ]
+    return df[columns]
+
+
+def build_lessons(cedict_pinyin: dict[str, str]) -> list[dict[str, object]]:
+    built = []
+    for idx, lesson in enumerate(LESSONS, start=1):
+        terms = [
+            {
+                "text": term.text,
+                "pinyin": pinyin_for(term.text, cedict_pinyin),
+                "meaning": term.meaning,
+            }
+            for term in lesson["terms"]
+        ]
+        sentences = [
+            {
+                "cn": sentence,
+                "pinyin": sentence_pinyin(sentence),
+                "en": meaning,
+            }
+            for sentence, meaning in lesson["sentences"]
+        ]
+        built.append(
+            {
+                "id": f"L{idx:02d}",
+                "level": lesson["level"],
+                "title": lesson["title"],
+                "goal": lesson["goal"],
+                "terms": terms,
+                "sentences": sentences,
+                "speaking_task": lesson["speaking_task"],
+            }
+        )
+    return built
+
+
+def write_csv(path: Path, rows: list[dict[str, object]], fieldnames: list[str]) -> None:
+    with path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def export_data(master: pd.DataFrame, lessons: list[dict[str, object]]) -> None:
+    master.to_csv(PROCESSED / "characters_master.csv", index=False, encoding="utf-8-sig")
+    learning = master[master["learning_band"].isin(["Zero Beginner", "HSK1 Core", "HSK2 Expansion", "HSK3 Expansion"])].copy()
+    learning.to_csv(PROCESSED / "learning_characters.csv", index=False, encoding="utf-8-sig")
+
+    lesson_terms = []
+    for lesson in lessons:
+        for term in lesson["terms"]:
+            lesson_terms.append(
+                {
+                    "lesson_id": lesson["id"],
+                    "level": lesson["level"],
+                    "lesson_title": lesson["title"],
+                    **term,
+                }
+            )
+    write_csv(
+        PROCESSED / "lesson_vocabulary.csv",
+        lesson_terms,
+        ["lesson_id", "level", "lesson_title", "text", "pinyin", "meaning"],
+    )
+    (CONTENT / "lessons.json").write_text(json.dumps(lessons, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def register_pdf_fonts() -> None:
+    pdfmetrics.registerFont(UnicodeCIDFont("STSong-Light"))
+
+
+def styles() -> dict[str, ParagraphStyle]:
+    base = getSampleStyleSheet()
+    return {
+        "title": ParagraphStyle(
+            "TitleCustom",
+            parent=base["Title"],
+            fontName="STSong-Light",
+            fontSize=24,
+            leading=30,
+            alignment=TA_CENTER,
+            spaceAfter=10,
+        ),
+        "h1": ParagraphStyle(
+            "H1Custom",
+            parent=base["Heading1"],
+            fontName="STSong-Light",
+            fontSize=17,
+            leading=22,
+            spaceBefore=12,
+            spaceAfter=8,
+        ),
+        "h2": ParagraphStyle(
+            "H2Custom",
+            parent=base["Heading2"],
+            fontName="STSong-Light",
+            fontSize=13,
+            leading=17,
+            spaceBefore=8,
+            spaceAfter=4,
+        ),
+        "body": ParagraphStyle(
+            "BodyCustom",
+            parent=base["BodyText"],
+            fontName="STSong-Light",
+            fontSize=9.5,
+            leading=13,
+            alignment=TA_LEFT,
+        ),
+        "small": ParagraphStyle(
+            "SmallCustom",
+            parent=base["BodyText"],
+            fontName="STSong-Light",
+            fontSize=8,
+            leading=10,
+        ),
+    }
+
+
+def p(text: object, style: ParagraphStyle) -> Paragraph:
+    return Paragraph(html.escape("" if text is None else str(text)), style)
+
+
+def add_table(story: list[object], rows: list[list[object]], widths: list[float], style: ParagraphStyle) -> None:
+    table_rows = [[p(cell, style) for cell in row] for row in rows]
+    table = Table(table_rows, colWidths=widths, repeatRows=1)
+    table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#203040")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("GRID", (0, 0), (-1, -1), 0.25, colors.HexColor("#c7ccd1")),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 4),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 4),
+                ("TOPPADDING", (0, 0), (-1, -1), 4),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#f6f8fa")]),
+            ]
+        )
+    )
+    story.append(table)
+    story.append(Spacer(1, 5 * mm))
+
+
+def build_study_pack(lessons: list[dict[str, object]]) -> None:
+    register_pdf_fonts()
+    st = styles()
+    doc = SimpleDocTemplate(
+        str(PDF / "Chinese_Character_Content_Study_Pack.pdf"),
+        pagesize=A4,
+        rightMargin=14 * mm,
+        leftMargin=14 * mm,
+        topMargin=14 * mm,
+        bottomMargin=14 * mm,
+        title="Chinese Character Content Study Pack",
+    )
+    story: list[object] = [
+        p("Chinese Character Content", st["title"]),
+        p("Speaking-first materials for English-speaking beginners, HSK 1-3 learners, and business Chinese starters.", st["body"]),
+        Spacer(1, 6 * mm),
+        p("How to Use", st["h1"]),
+        p("1. Read the words aloud. 2. Practice the sentence patterns. 3. Complete the speaking task without looking. Writing and stroke order are intentionally excluded in this version.", st["body"]),
+        PageBreak(),
+    ]
+
+    current_level = None
+    for lesson in lessons:
+        if current_level != lesson["level"]:
+            if current_level is not None:
+                story.append(PageBreak())
+            current_level = lesson["level"]
+            story.append(p(str(current_level), st["h1"]))
+        story.append(p(f"{lesson['id']} - {lesson['title']}", st["h2"]))
+        story.append(p(f"Goal: {lesson['goal']}", st["body"]))
+        vocab_rows = [["Chinese", "Pinyin", "English"]] + [
+            [term["text"], term["pinyin"], term["meaning"]] for term in lesson["terms"]
+        ]
+        add_table(story, vocab_rows, [35 * mm, 55 * mm, 78 * mm], st["small"])
+        sentence_rows = [["Chinese", "Pinyin", "English"]] + [
+            [sent["cn"], sent["pinyin"], sent["en"]] for sent in lesson["sentences"]
+        ]
+        add_table(story, sentence_rows, [55 * mm, 65 * mm, 48 * mm], st["small"])
+        story.append(p(f"Speaking task: {lesson['speaking_task']}", st["body"]))
+        story.append(Spacer(1, 7 * mm))
+    doc.build(story)
+
+
+def build_character_pdf(master: pd.DataFrame) -> None:
+    register_pdf_fonts()
+    st = styles()
+    doc = SimpleDocTemplate(
+        str(PDF / "Master_Character_List_Top_600.pdf"),
+        pagesize=A4,
+        rightMargin=12 * mm,
+        leftMargin=12 * mm,
+        topMargin=12 * mm,
+        bottomMargin=12 * mm,
+        title="Master Character List Top 600",
+    )
+    story: list[object] = [
+        p("Master Character List: Top 600", st["title"]),
+        p("Characters are ranked by the 2.5-billion-character corpus frequency file, then grouped into HSK-inspired learning bands.", st["body"]),
+        Spacer(1, 5 * mm),
+    ]
+    top = master[master["frequency_rank"].notna()].sort_values("frequency_rank").head(600)
+    for band, group in top.groupby("learning_band", sort=False):
+        story.append(p(str(band), st["h1"]))
+        rows = [["Rank", "字", "Pinyin", "English"]] + [
+            [
+                int(row.frequency_rank),
+                row.character,
+                row.pinyin,
+                str(row.definition_en)[:120],
+            ]
+            for row in group.itertuples()
+        ]
+        add_table(story, rows, [17 * mm, 15 * mm, 38 * mm, 103 * mm], st["small"])
+    doc.build(story)
+
+
+def html_page(title: str, body: str) -> str:
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{html.escape(title)}</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">Chinese Character Content</a>
+    <nav>
+      <a href="index.html#lessons">Lessons</a>
+      <a href="characters.html">Top 600</a>
+      <a href="downloads.html">Downloads</a>
+    </nav>
+  </header>
+  <main>
+{body}
+  </main>
+</body>
+</html>
+"""
+
+
+def lesson_card(lesson: dict[str, object]) -> str:
+    vocab_rows = "\n".join(
+        f"<tr><td class='han'>{html.escape(term['text'])}</td><td>{html.escape(term['pinyin'])}</td><td>{html.escape(term['meaning'])}</td></tr>"
+        for term in lesson["terms"]
+    )
+    sentence_rows = "\n".join(
+        f"<tr><td>{html.escape(sent['cn'])}</td><td>{html.escape(sent['pinyin'])}</td><td>{html.escape(sent['en'])}</td></tr>"
+        for sent in lesson["sentences"]
+    )
+    return f"""
+    <article class="lesson">
+      <div class="lesson-head">
+        <span>{html.escape(lesson['id'])}</span>
+        <h3>{html.escape(lesson['title'])}</h3>
+      </div>
+      <p class="goal">{html.escape(lesson['goal'])}</p>
+      <h4>Vocabulary</h4>
+      <table><thead><tr><th>Chinese</th><th>Pinyin</th><th>English</th></tr></thead><tbody>{vocab_rows}</tbody></table>
+      <h4>Sentences</h4>
+      <table><thead><tr><th>Chinese</th><th>Pinyin</th><th>English</th></tr></thead><tbody>{sentence_rows}</tbody></table>
+      <p class="task"><strong>Speaking task:</strong> {html.escape(lesson['speaking_task'])}</p>
+    </article>
+    """
+
+
+def build_site(master: pd.DataFrame, lessons: list[dict[str, object]]) -> None:
+    (SITE / ".nojekyll").write_text("", encoding="utf-8")
+    css = """
+:root {
+  color-scheme: light;
+  --ink: #18212b;
+  --muted: #5f6b7a;
+  --line: #d7dce2;
+  --paper: #ffffff;
+  --band: #f3f6f8;
+  --accent: #0f766e;
+  --accent-dark: #134e4a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: #fbfcfd;
+  line-height: 1.5;
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 28px;
+  background: rgba(255,255,255,0.96);
+  border-bottom: 1px solid var(--line);
+}
+.brand { color: var(--accent-dark); font-weight: 760; text-decoration: none; }
+nav { display: flex; gap: 16px; flex-wrap: wrap; }
+nav a { color: var(--ink); text-decoration: none; font-size: 14px; }
+main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 56px; }
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
+  gap: 32px;
+  align-items: end;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 26px;
+}
+h1 { font-size: clamp(34px, 5vw, 62px); line-height: 1.02; margin: 0 0 16px; letter-spacing: 0; }
+h2 { margin: 34px 0 12px; font-size: 26px; }
+h3 { margin: 0; font-size: 20px; }
+h4 { margin: 18px 0 8px; font-size: 14px; color: var(--accent-dark); text-transform: uppercase; }
+.lead { font-size: 18px; color: var(--muted); max-width: 760px; }
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.stat { background: var(--band); border: 1px solid var(--line); padding: 14px; border-radius: 8px; }
+.stat strong { display: block; font-size: 24px; color: var(--accent-dark); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+.tile, .lesson {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+}
+.tile p, .goal { color: var(--muted); margin-bottom: 0; }
+.lesson { margin: 18px 0; }
+.lesson-head { display: flex; gap: 12px; align-items: baseline; }
+.lesson-head span {
+  color: white;
+  background: var(--accent);
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 12px;
+  font-weight: 700;
+}
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0 14px; }
+th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+th { background: #203040; color: white; font-weight: 680; }
+tbody tr:nth-child(even) { background: #f8fafb; }
+.han { font-size: 20px; font-weight: 720; }
+.task { border-left: 4px solid var(--accent); padding-left: 12px; }
+.downloads a { display: block; margin: 8px 0; color: var(--accent-dark); font-weight: 700; }
+@media (max-width: 760px) {
+  .topbar { align-items: flex-start; flex-direction: column; }
+  .hero { grid-template-columns: 1fr; }
+  main { padding: 24px 14px 42px; }
+  table { font-size: 13px; }
+  th, td { padding: 7px; }
+}
+"""
+    (SITE / "assets" / "styles.css").write_text(css, encoding="utf-8")
+
+    level_counts = master["learning_band"].value_counts().to_dict()
+    total_chars = len(master)
+    lesson_count = len(lessons)
+    terms_count = sum(len(lesson["terms"]) for lesson in lessons)
+    levels = ["Zero Beginner", "HSK1 Core", "HSK2 Expansion", "HSK3 Expansion", "Business Starter"]
+    level_tiles = "\n".join(
+        f"<section class='tile'><h3>{html.escape(level)}</h3><p>{sum(1 for lesson in lessons if lesson['level'] == level)} lessons. Character band count: {level_counts.get(level, 0)}.</p></section>"
+        for level in levels
+    )
+    lesson_sections = []
+    for level in levels:
+        cards = "\n".join(lesson_card(lesson) for lesson in lessons if lesson["level"] == level)
+        lesson_sections.append(f"<section id='{html.escape(level.lower().replace(' ', '-'))}'><h2>{html.escape(level)}</h2>{cards}</section>")
+
+    index_body = f"""
+    <section class="hero">
+      <div>
+        <h1>Speaking-first Chinese character materials</h1>
+        <p class="lead">Printable and web-ready lessons for English-speaking beginners, HSK 1-3 learners, and business Chinese starters. The character sequence is driven by local frequency data and common-character lists.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><strong>{total_chars:,}</strong><span>merged characters</span></div>
+        <div class="stat"><strong>600</strong><span>top learning characters</span></div>
+        <div class="stat"><strong>{lesson_count}</strong><span>speaking lessons</span></div>
+        <div class="stat"><strong>{terms_count}</strong><span>lesson terms</span></div>
+      </div>
+    </section>
+    <section>
+      <h2>Learning Tracks</h2>
+      <div class="grid">{level_tiles}</div>
+    </section>
+    <section id="lessons">
+      <h2>Lessons</h2>
+      {''.join(lesson_sections)}
+    </section>
+"""
+    (SITE / "index.html").write_text(html_page("Chinese Character Content", index_body), encoding="utf-8")
+
+    top = master[master["frequency_rank"].notna()].sort_values("frequency_rank").head(600)
+    char_rows = "\n".join(
+        f"<tr><td>{int(row.frequency_rank)}</td><td class='han'>{html.escape(row.character)}</td><td>{html.escape(row.pinyin)}</td><td>{html.escape(row.learning_band)}</td><td>{html.escape(str(row.definition_en)[:160])}</td></tr>"
+        for row in top.itertuples()
+    )
+    char_body = f"""
+    <h1>Top 600 Characters</h1>
+    <p class="lead">Ranked by corpus frequency and grouped into HSK-inspired learning bands.</p>
+    <table>
+      <thead><tr><th>Rank</th><th>Character</th><th>Pinyin</th><th>Band</th><th>English</th></tr></thead>
+      <tbody>{char_rows}</tbody>
+    </table>
+"""
+    (SITE / "characters.html").write_text(html_page("Top 600 Characters", char_body), encoding="utf-8")
+
+    files_root = SITE / "files"
+    for folder in [files_root / "pdf", files_root / "data", files_root / "content"]:
+        folder.mkdir(parents=True, exist_ok=True)
+    for source in PDF.glob("*.pdf"):
+        shutil.copy2(source, files_root / "pdf" / source.name)
+    for source in PROCESSED.glob("*.csv"):
+        shutil.copy2(source, files_root / "data" / source.name)
+    shutil.copy2(CONTENT / "lessons.json", files_root / "content" / "lessons.json")
+
+    downloads_body = """
+    <h1>Downloads</h1>
+    <section class="downloads">
+      <h2>PDF</h2>
+      <a href="files/pdf/Chinese_Character_Content_Study_Pack.pdf">Chinese Character Content Study Pack</a>
+      <a href="files/pdf/Master_Character_List_Top_600.pdf">Master Character List Top 600</a>
+      <h2>Data</h2>
+      <a href="files/data/characters_master.csv">Characters master CSV</a>
+      <a href="files/data/learning_characters.csv">Learning characters CSV</a>
+      <a href="files/data/lesson_vocabulary.csv">Lesson vocabulary CSV</a>
+      <a href="files/content/lessons.json">Lessons JSON</a>
+      <h2>Attribution</h2>
+      <p>English definitions are derived from CC-CEDICT via MDBG and are shared under CC BY-SA 4.0 attribution-sharealike terms.</p>
+      <a href="https://www.mdbg.net/chinese/dictionary?page=cc-cedict">CC-CEDICT at MDBG</a>
+      <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+    </section>
+"""
+    (SITE / "downloads.html").write_text(html_page("Downloads", downloads_body), encoding="utf-8")
+
+
+def write_summary(master: pd.DataFrame, lessons: list[dict[str, object]]) -> None:
+    summary = {
+        "merged_characters": int(len(master)),
+        "source_counts": {
+            "3500": int(master["in_3500"].sum()),
+            "7000": int(master["in_7000"].sum()),
+            "corpus": int(master["in_corpus"].sum()),
+        },
+        "top_600_characters": 600,
+        "lessons": len(lessons),
+        "lesson_terms": sum(len(lesson["terms"]) for lesson in lessons),
+        "outputs": [
+            "data/processed/characters_master.csv",
+            "data/processed/learning_characters.csv",
+            "data/processed/lesson_vocabulary.csv",
+            "content/lessons.json",
+            "pdf/Chinese_Character_Content_Study_Pack.pdf",
+            "pdf/Master_Character_List_Top_600.pdf",
+            "docs/index.html",
+        ],
+    }
+    (PROCESSED / "build_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+
+
+def main() -> None:
+    ensure_dirs()
+    cedict_pinyin, cedict_defs = load_cedict()
+    source = read_source_data()
+    master = enrich_characters(source, cedict_pinyin, cedict_defs)
+    lessons = build_lessons(cedict_pinyin)
+    export_data(master, lessons)
+    build_study_pack(lessons)
+    build_character_pdf(master)
+    build_site(master, lessons)
+    write_summary(master, lessons)
+    print(f"Done. Merged {len(master):,} characters and built {len(lessons)} lessons.")
+
+
+if __name__ == "__main__":
+    main()

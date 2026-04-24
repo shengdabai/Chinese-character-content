@@ -1,0 +1,125 @@
+﻿lesson_id,level,lesson_title,text,pinyin,meaning
+L01,Zero Beginner,Greetings and Names,你好,nǐ hǎo,hello
+L01,Zero Beginner,Greetings and Names,我,wǒ,I; me
+L01,Zero Beginner,Greetings and Names,你,nǐ,you
+L01,Zero Beginner,Greetings and Names,叫,jiào,to be called
+L01,Zero Beginner,Greetings and Names,什么,shén me,what
+L01,Zero Beginner,Greetings and Names,名字,míng zì,name
+L01,Zero Beginner,Greetings and Names,是,shì,to be
+L01,Zero Beginner,Greetings and Names,老师,lǎo shī,teacher
+L01,Zero Beginner,Greetings and Names,学生,xué shēng,student
+L01,Zero Beginner,Greetings and Names,谢谢,xiè xiè,thank you
+L02,Zero Beginner,Numbers and Phone Numbers,一,yī,one
+L02,Zero Beginner,Numbers and Phone Numbers,二,èr,two
+L02,Zero Beginner,Numbers and Phone Numbers,三,sān,three
+L02,Zero Beginner,Numbers and Phone Numbers,四,sì,four
+L02,Zero Beginner,Numbers and Phone Numbers,五,wǔ,five
+L02,Zero Beginner,Numbers and Phone Numbers,六,liù,six
+L02,Zero Beginner,Numbers and Phone Numbers,七,qī,seven
+L02,Zero Beginner,Numbers and Phone Numbers,八,bā,eight
+L02,Zero Beginner,Numbers and Phone Numbers,九,jiǔ,nine
+L02,Zero Beginner,Numbers and Phone Numbers,十,shí,ten
+L02,Zero Beginner,Numbers and Phone Numbers,电话,diàn huà,phone
+L02,Zero Beginner,Numbers and Phone Numbers,号码,hào mǎ,number
+L03,Zero Beginner,Countries and Languages,中国,zhōng guó,China
+L03,Zero Beginner,Countries and Languages,美国,měi guó,United States
+L03,Zero Beginner,Countries and Languages,英国,yīng guó,United Kingdom
+L03,Zero Beginner,Countries and Languages,西班牙,xī bān yá,Spain
+L03,Zero Beginner,Countries and Languages,人,rén,person
+L03,Zero Beginner,Countries and Languages,中文,zhōng wén,Chinese language
+L03,Zero Beginner,Countries and Languages,英文,yīng wén,English language
+L03,Zero Beginner,Countries and Languages,说,shuō,to speak
+L03,Zero Beginner,Countries and Languages,会,huì,can; know how to
+L04,HSK1 Core,Family and People,家,jiā,home; family
+L04,HSK1 Core,Family and People,爸爸,bà bà,father
+L04,HSK1 Core,Family and People,妈妈,mā mā,mother
+L04,HSK1 Core,Family and People,儿子,ér zi,son
+L04,HSK1 Core,Family and People,女儿,nǚ ér,daughter
+L04,HSK1 Core,Family and People,朋友,péng yǒu,friend
+L04,HSK1 Core,Family and People,同学,tóng xué,classmate
+L04,HSK1 Core,Family and People,医生,yī shēng,doctor
+L04,HSK1 Core,Family and People,工作,gōng zuò,work; job
+L04,HSK1 Core,Family and People,忙,máng,busy
+L05,HSK1 Core,Time and Daily Schedule,今天,jīn tiān,today
+L05,HSK1 Core,Time and Daily Schedule,明天,míng tiān,tomorrow
+L05,HSK1 Core,Time and Daily Schedule,昨天,zuó tiān,yesterday
+L05,HSK1 Core,Time and Daily Schedule,现在,xiàn zài,now
+L05,HSK1 Core,Time and Daily Schedule,上午,shàng wǔ,morning
+L05,HSK1 Core,Time and Daily Schedule,下午,xià wǔ,afternoon
+L05,HSK1 Core,Time and Daily Schedule,晚上,wǎn shàng,evening
+L05,HSK1 Core,Time and Daily Schedule,点,diǎn,o'clock
+L05,HSK1 Core,Time and Daily Schedule,去,qù,to go
+L05,HSK1 Core,Time and Daily Schedule,回,huí,to return
+L05,HSK1 Core,Time and Daily Schedule,睡觉,shuì jiào,to sleep
+L06,HSK2 Expansion,Eating and Ordering,吃,chī,to eat
+L06,HSK2 Expansion,Eating and Ordering,喝,hē,to drink
+L06,HSK2 Expansion,Eating and Ordering,水,shuǐ,water
+L06,HSK2 Expansion,Eating and Ordering,茶,chá,tea
+L06,HSK2 Expansion,Eating and Ordering,咖啡,kā fēi,coffee
+L06,HSK2 Expansion,Eating and Ordering,米饭,mǐ fàn,rice
+L06,HSK2 Expansion,Eating and Ordering,面条,miàn tiáo,noodles
+L06,HSK2 Expansion,Eating and Ordering,菜单,cài dān,menu
+L06,HSK2 Expansion,Eating and Ordering,服务员,fú wù yuán,server
+L06,HSK2 Expansion,Eating and Ordering,买单,mǎi dān,to pay the bill
+L06,HSK2 Expansion,Eating and Ordering,好吃,hǎo chī,tasty
+L07,HSK2 Expansion,Travel and Directions,机场,jī chǎng,airport
+L07,HSK2 Expansion,Travel and Directions,酒店,jiǔ diàn,hotel
+L07,HSK2 Expansion,Travel and Directions,出租车,chū zū chē,taxi
+L07,HSK2 Expansion,Travel and Directions,地铁,dì tiě,subway
+L07,HSK2 Expansion,Travel and Directions,车站,chē zhàn,station
+L07,HSK2 Expansion,Travel and Directions,地址,dì zhǐ,address
+L07,HSK2 Expansion,Travel and Directions,左边,zuǒ biān,left side
+L07,HSK2 Expansion,Travel and Directions,右边,yòu biān,right side
+L07,HSK2 Expansion,Travel and Directions,前面,qián miàn,front
+L07,HSK2 Expansion,Travel and Directions,后面,hòu miàn,back
+L07,HSK2 Expansion,Travel and Directions,怎么走,zěn me zǒu,how to get there
+L08,HSK3 Expansion,Opinions and Reasons,觉得,jué de,to think; to feel
+L08,HSK3 Expansion,Opinions and Reasons,因为,yīn wèi,because
+L08,HSK3 Expansion,Opinions and Reasons,所以,suǒ yǐ,so
+L08,HSK3 Expansion,Opinions and Reasons,但是,dàn shì,but
+L08,HSK3 Expansion,Opinions and Reasons,可能,kě néng,maybe; possible
+L08,HSK3 Expansion,Opinions and Reasons,重要,zhòng yào,important
+L08,HSK3 Expansion,Opinions and Reasons,问题,wèn tí,problem; question
+L08,HSK3 Expansion,Opinions and Reasons,办法,bàn fǎ,method; solution
+L08,HSK3 Expansion,Opinions and Reasons,容易,róng yì,easy
+L08,HSK3 Expansion,Opinions and Reasons,难,nán,difficult
+L09,HSK3 Expansion,Plans and Changes,计划,jì huà,plan
+L09,HSK3 Expansion,Plans and Changes,准备,zhǔn bèi,to prepare; plan to
+L09,HSK3 Expansion,Plans and Changes,已经,yǐ jīng,already
+L09,HSK3 Expansion,Plans and Changes,还,hái,still; yet
+L09,HSK3 Expansion,Plans and Changes,完成,wán chéng,to complete
+L09,HSK3 Expansion,Plans and Changes,改变,gǎi biàn,to change
+L09,HSK3 Expansion,Plans and Changes,开始,kāi shǐ,to start
+L09,HSK3 Expansion,Plans and Changes,结束,jié shù,to end
+L09,HSK3 Expansion,Plans and Changes,以前,yǐ qián,before
+L09,HSK3 Expansion,Plans and Changes,以后,yǐ hòu,after; later
+L10,Business Starter,Introducing Your Company,公司,gōng sī,company
+L10,Business Starter,Introducing Your Company,部门,bù mén,department
+L10,Business Starter,Introducing Your Company,职位,zhí wèi,position
+L10,Business Starter,Introducing Your Company,经理,jīng lǐ,manager
+L10,Business Starter,Introducing Your Company,客户,kè hù,client
+L10,Business Starter,Introducing Your Company,产品,chǎn pǐn,product
+L10,Business Starter,Introducing Your Company,市场,shì chǎng,market
+L10,Business Starter,Introducing Your Company,销售,xiāo shòu,sales
+L10,Business Starter,Introducing Your Company,负责,fù zé,to be responsible for
+L10,Business Starter,Introducing Your Company,合作,hé zuò,cooperation
+L11,Business Starter,Meetings and Follow-up,会议,huì yì,meeting
+L11,Business Starter,Meetings and Follow-up,开会,kāi huì,to have a meeting
+L11,Business Starter,Meetings and Follow-up,时间,shí jiān,time
+L11,Business Starter,Meetings and Follow-up,地点,dì diǎn,place
+L11,Business Starter,Meetings and Follow-up,议程,yì chéng,agenda
+L11,Business Starter,Meetings and Follow-up,确认,què rèn,to confirm
+L11,Business Starter,Meetings and Follow-up,安排,ān pái,to arrange
+L11,Business Starter,Meetings and Follow-up,资料,zī liào,materials
+L11,Business Starter,Meetings and Follow-up,稍后,shāo hòu,later
+L11,Business Starter,Meetings and Follow-up,回复,huí fù,to reply
+L12,Business Starter,Prices and Payment,价格,jià gé,price
+L12,Business Starter,Prices and Payment,多少钱,duō shǎo qián,how much money
+L12,Business Starter,Prices and Payment,折扣,zhé kòu,discount
+L12,Business Starter,Prices and Payment,合同,hé tóng,contract
+L12,Business Starter,Prices and Payment,付款,fù kuǎn,payment
+L12,Business Starter,Prices and Payment,发票,fā piào,invoice
+L12,Business Starter,Prices and Payment,预算,yù suàn,budget
+L12,Business Starter,Prices and Payment,成本,chéng běn,cost
+L12,Business Starter,Prices and Payment,可以,kě yǐ,can; may
+L12,Business Starter,Prices and Payment,合适,hé shì,suitable

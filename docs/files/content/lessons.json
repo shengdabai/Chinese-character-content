@@ -1,0 +1,929 @@
+[
+  {
+    "id": "L01",
+    "level": "Zero Beginner",
+    "title": "Greetings and Names",
+    "goal": "Greet people and introduce your name.",
+    "terms": [
+      {
+        "text": "你好",
+        "pinyin": "nǐ hǎo",
+        "meaning": "hello"
+      },
+      {
+        "text": "我",
+        "pinyin": "wǒ",
+        "meaning": "I; me"
+      },
+      {
+        "text": "你",
+        "pinyin": "nǐ",
+        "meaning": "you"
+      },
+      {
+        "text": "叫",
+        "pinyin": "jiào",
+        "meaning": "to be called"
+      },
+      {
+        "text": "什么",
+        "pinyin": "shén me",
+        "meaning": "what"
+      },
+      {
+        "text": "名字",
+        "pinyin": "míng zì",
+        "meaning": "name"
+      },
+      {
+        "text": "是",
+        "pinyin": "shì",
+        "meaning": "to be"
+      },
+      {
+        "text": "老师",
+        "pinyin": "lǎo shī",
+        "meaning": "teacher"
+      },
+      {
+        "text": "学生",
+        "pinyin": "xué shēng",
+        "meaning": "student"
+      },
+      {
+        "text": "谢谢",
+        "pinyin": "xiè xiè",
+        "meaning": "thank you"
+      }
+    ],
+    "sentences": [
+      {
+        "cn": "你好，我叫 David。",
+        "pinyin": "nǐ hǎo, wǒ jiào David.",
+        "en": "Hello, my name is David."
+      },
+      {
+        "cn": "你叫什么名字？",
+        "pinyin": "nǐ jiào shén me míng zì?",
+        "en": "What is your name?"
+      },
+      {
+        "cn": "我是学生。",
+        "pinyin": "wǒ shì xué shēng.",
+        "en": "I am a student."
+      }
+    ],
+    "speaking_task": "Introduce yourself with: 你好，我叫 __。我是 __。"
+  },
+  {
+    "id": "L02",
+    "level": "Zero Beginner",
+    "title": "Numbers and Phone Numbers",
+    "goal": "Say numbers and read a phone number aloud.",
+    "terms": [
+      {
+        "text": "一",
+        "pinyin": "yī",
+        "meaning": "one"
+      },
+      {
+        "text": "二",
+        "pinyin": "èr",
+        "meaning": "two"
+      },
+      {
+        "text": "三",
+        "pinyin": "sān",
+        "meaning": "three"
+      },
+      {
+        "text": "四",
+        "pinyin": "sì",
+        "meaning": "four"
+      },
+      {
+        "text": "五",
+        "pinyin": "wǔ",
+        "meaning": "five"
+      },
+      {
+        "text": "六",
+        "pinyin": "liù",
+        "meaning": "six"
+      },
+      {
+        "text": "七",
+        "pinyin": "qī",
+        "meaning": "seven"
+      },
+      {
+        "text": "八",
+        "pinyin": "bā",
+        "meaning": "eight"
+      },
+      {
+        "text": "九",
+        "pinyin": "jiǔ",
+        "meaning": "nine"
+      },
+      {
+        "text": "十",
+        "pinyin": "shí",
+        "meaning": "ten"
+      },
+      {
+        "text": "电话",
+        "pinyin": "diàn huà",
+        "meaning": "phone"
+      },
+      {
+        "text": "号码",
+        "pinyin": "hào mǎ",
+        "meaning": "number"
+      }
+    ],
+    "sentences": [
+      {
+        "cn": "我的电话号码是 13800138000。",
+        "pinyin": "wǒ de diàn huà hào mǎ shì 13800138000.",
+        "en": "My phone number is 13800138000."
+      },
+      {
+        "cn": "请再说一遍。",
+        "pinyin": "qǐng zài shuō yī biàn.",
+        "en": "Please say it one more time."
+      }
+    ],
+    "speaking_task": "Read your phone number slowly in Chinese."
+  },
+  {
+    "id": "L03",
+    "level": "Zero Beginner",
+    "title": "Countries and Languages",
+    "goal": "Say where you are from and what languages you speak.",
+    "terms": [
+      {
+        "text": "中国",
+        "pinyin": "zhōng guó",
+        "meaning": "China"
+      },
+      {
+        "text": "美国",
+        "pinyin": "měi guó",
+        "meaning": "United States"
+      },
+      {
+        "text": "英国",
+        "pinyin": "yīng guó",
+        "meaning": "United Kingdom"
+      },
+      {
+        "text": "西班牙",
+        "pinyin": "xī bān yá",
+        "meaning": "Spain"
+      },
+      {
+        "text": "人",
+        "pinyin": "rén",
+        "meaning": "person"
+      },
+      {
+        "text": "中文",
+        "pinyin": "zhōng wén",
+        "meaning": "Chinese language"
+      },
+      {
+        "text": "英文",
+        "pinyin": "yīng wén",
+        "meaning": "English language"
+      },
+      {
+        "text": "说",
+        "pinyin": "shuō",
+        "meaning": "to speak"
+      },
+      {
+        "text": "会",
+        "pinyin": "huì",
+        "meaning": "can; know how to"
+      }
+    ],
+    "sentences": [
+      {
+        "cn": "我是美国人。",
+        "pinyin": "wǒ shì měi guó rén.",
+        "en": "I am American."
+      },
+      {
+        "cn": "我会说一点中文。",
+        "pinyin": "wǒ huì shuō yì diǎn zhōng wén.",
+        "en": "I can speak a little Chinese."
+      },
+      {
+        "cn": "你会说英文吗？",
+        "pinyin": "nǐ huì shuō yīng wén ma?",
+        "en": "Can you speak English?"
+      }
+    ],
+    "speaking_task": "Say your country and one language you speak."
+  },
+  {
+    "id": "L04",
+    "level": "HSK1 Core",
+    "title": "Family and People",
+    "goal": "Talk about family members.",
+    "terms": [
+      {
+        "text": "家",
+        "pinyin": "jiā",
+        "meaning": "home; family"
+      },
+      {
+        "text": "爸爸",
+        "pinyin": "bà bà",
+        "meaning": "father"
+      },
+      {
+        "text": "妈妈",
+        "pinyin": "mā mā",
+        "meaning": "mother"
+      },
+      {
+        "text": "儿子",
+        "pinyin": "ér zi",
+        "meaning": "son"
+      },
+      {
+        "text": "女儿",
+        "pinyin": "nǚ ér",
+        "meaning": "daughter"
+      },
+      {
+        "text": "朋友",
+        "pinyin": "péng yǒu",
+        "meaning": "friend"
+      },
+      {
+        "text": "同学",
+        "pinyin": "tóng xué",
+        "meaning": "classmate"
+      },
+      {
+        "text": "医生",
+        "pinyin": "yī shēng",
+        "meaning": "doctor"
+      },
+      {
+        "text": "工作",
+        "pinyin": "gōng zuò",
+        "meaning": "work; job"
+      },
+      {
+        "text": "忙",
+        "pinyin": "máng",
+        "meaning": "busy"
+      }
+    ],
+    "sentences": [
+      {
+        "cn": "我家有三个人。",
+        "pinyin": "wǒ jiā yǒu sān gè rén.",
+        "en": "There are three people in my family."
+      },
+      {
+        "cn": "我妈妈是医生。",
+        "pinyin": "wǒ mā mā shì yī shēng.",
+        "en": "My mother is a doctor."
+      },
+      {
+        "cn": "你今天忙吗？",
+        "pinyin": "nǐ jīn tiān máng ma?",
+        "en": "Are you busy today?"
+      }
+    ],
+    "speaking_task": "Describe two people in your family."
+  },
+  {
+    "id": "L05",
+    "level": "HSK1 Core",
+    "title": "Time and Daily Schedule",
+    "goal": "Say basic time and daily actions.",
+    "terms": [
+      {
+        "text": "今天",
+        "pinyin": "jīn tiān",
+        "meaning": "today"
+      },
+      {
+        "text": "明天",
+        "pinyin": "míng tiān",
+        "meaning": "tomorrow"
+      },
+      {
+        "text": "昨天",
+        "pinyin": "zuó tiān",
+        "meaning": "yesterday"
+      },
+      {
+        "text": "现在",
+        "pinyin": "xiàn zài",
+        "meaning": "now"
+      },
+      {
+        "text": "上午",
+        "pinyin": "shàng wǔ",
+        "meaning": "morning"
+      },
+      {
+        "text": "下午",
+        "pinyin": "xià wǔ",
+        "meaning": "afternoon"
+      },
+      {
+        "text": "晚上",
+        "pinyin": "wǎn shàng",
+        "meaning": "evening"
+      },
+      {
+        "text": "点",
+        "pinyin": "diǎn",
+        "meaning": "o'clock"
+      },
+      {
+        "text": "去",
+        "pinyin": "qù",
+        "meaning": "to go"
+      },
+      {
+        "text": "回",
+        "pinyin": "huí",
+        "meaning": "to return"
+      },
+      {
+        "text": "睡觉",
+        "pinyin": "shuì jiào",
+        "meaning": "to sleep"
+      }
+    ],
+    "sentences": [
+      {
+        "cn": "现在几点？",
+        "pinyin": "xiàn zài jǐ diǎn?",
+        "en": "What time is it now?"
+      },
+      {
+        "cn": "我明天上午去学校。",
+        "pinyin": "wǒ míng tiān shàng wǔ qù xué xiào.",
+        "en": "I will go to school tomorrow morning."
+      },
+      {
+        "cn": "我晚上十一点睡觉。",
+        "pinyin": "wǒ wǎn shàng shí yì diǎn shuì jiào.",
+        "en": "I sleep at 11 p.m."
+      }
+    ],
+    "speaking_task": "Say three things you do today."
+  },
+  {
+    "id": "L06",
+    "level": "HSK2 Expansion",
+    "title": "Eating and Ordering",
+    "goal": "Order simple food and drinks.",
+    "terms": [
+      {
+        "text": "吃",
+        "pinyin": "chī",
+        "meaning": "to eat"
+      },
+      {
+        "text": "喝",
+        "pinyin": "hē",
+        "meaning": "to drink"
+      },
+      {
+        "text": "水",
+        "pinyin": "shuǐ",
+        "meaning": "water"
+      },
+      {
+        "text": "茶",
+        "pinyin": "chá",
+        "meaning": "tea"
+      },
+      {
+        "text": "咖啡",
+        "pinyin": "kā fēi",
+        "meaning": "coffee"
+      },
+      {
+        "text": "米饭",
+        "pinyin": "mǐ fàn",
+        "meaning": "rice"
+      },
+      {
+        "text": "面条",
+        "pinyin": "miàn tiáo",
+        "meaning": "noodles"
+      },
+      {
+        "text": "菜单",
+        "pinyin": "cài dān",
+        "meaning": "menu"
+      },
+      {
+        "text": "服务员",
+        "pinyin": "fú wù yuán",
+        "meaning": "server"
+      },
+      {
+        "text": "买单",
+        "pinyin": "mǎi dān",
+        "meaning": "to pay the bill"
+      },
+      {
+        "text": "好吃",
+        "pinyin": "hǎo chī",
+        "meaning": "tasty"
+      }
+    ],
+    "sentences": [
+      {
+        "cn": "我要一杯茶。",
+        "pinyin": "wǒ yào yī bēi chá.",
+        "en": "I would like a cup of tea."
+      },
+      {
+        "cn": "这个菜很好吃。",
+        "pinyin": "zhè ge cài hěn hǎo chī.",
+        "en": "This dish is tasty."
+      },
+      {
+        "cn": "服务员，买单。",
+        "pinyin": "fú wù yuán, mǎi dān.",
+        "en": "Server, the bill please."
+      }
+    ],
+    "speaking_task": "Order one drink and one food item."
+  },
+  {
+    "id": "L07",
+    "level": "HSK2 Expansion",
+    "title": "Travel and Directions",
+    "goal": "Ask where a place is and how to get there.",
+    "terms": [
+      {
+        "text": "机场",
+        "pinyin": "jī chǎng",
+        "meaning": "airport"
+      },
+      {
+        "text": "酒店",
+        "pinyin": "jiǔ diàn",
+        "meaning": "hotel"
+      },
+      {
+        "text": "出租车",
+        "pinyin": "chū zū chē",
+        "meaning": "taxi"
+      },
+      {
+        "text": "地铁",
+        "pinyin": "dì tiě",
+        "meaning": "subway"
+      },
+      {
+        "text": "车站",
+        "pinyin": "chē zhàn",
+        "meaning": "station"
+      },
+      {
+        "text": "地址",
+        "pinyin": "dì zhǐ",
+        "meaning": "address"
+      },
+      {
+        "text": "左边",
+        "pinyin": "zuǒ biān",
+        "meaning": "left side"
+      },
+      {
+        "text": "右边",
+        "pinyin": "yòu biān",
+        "meaning": "right side"
+      },
+      {
+        "text": "前面",
+        "pinyin": "qián miàn",
+        "meaning": "front"
+      },
+      {
+        "text": "后面",
+        "pinyin": "hòu miàn",
+        "meaning": "back"
+      },
+      {
+        "text": "怎么走",
+        "pinyin": "zěn me zǒu",
+        "meaning": "how to get there"
+      }
+    ],
+    "sentences": [
+      {
+        "cn": "酒店在哪里？",
+        "pinyin": "jiǔ diàn zài nǎ lǐ?",
+        "en": "Where is the hotel?"
+      },
+      {
+        "cn": "请问，地铁站怎么走？",
+        "pinyin": "qǐng wèn, dì tiě zhàn zěn me zǒu?",
+        "en": "Excuse me, how do I get to the subway station?"
+      },
+      {
+        "cn": "机场在前面。",
+        "pinyin": "jī chǎng zài qián miàn.",
+        "en": "The airport is ahead."
+      }
+    ],
+    "speaking_task": "Ask for directions to a hotel or subway station."
+  },
+  {
+    "id": "L08",
+    "level": "HSK3 Expansion",
+    "title": "Opinions and Reasons",
+    "goal": "Give a simple opinion and reason.",
+    "terms": [
+      {
+        "text": "觉得",
+        "pinyin": "jué de",
+        "meaning": "to think; to feel"
+      },
+      {
+        "text": "因为",
+        "pinyin": "yīn wèi",
+        "meaning": "because"
+      },
+      {
+        "text": "所以",
+        "pinyin": "suǒ yǐ",
+        "meaning": "so"
+      },
+      {
+        "text": "但是",
+        "pinyin": "dàn shì",
+        "meaning": "but"
+      },
+      {
+        "text": "可能",
+        "pinyin": "kě néng",
+        "meaning": "maybe; possible"
+      },
+      {
+        "text": "重要",
+        "pinyin": "zhòng yào",
+        "meaning": "important"
+      },
+      {
+        "text": "问题",
+        "pinyin": "wèn tí",
+        "meaning": "problem; question"
+      },
+      {
+        "text": "办法",
+        "pinyin": "bàn fǎ",
+        "meaning": "method; solution"
+      },
+      {
+        "text": "容易",
+        "pinyin": "róng yì",
+        "meaning": "easy"
+      },
+      {
+        "text": "难",
+        "pinyin": "nán",
+        "meaning": "difficult"
+      }
+    ],
+    "sentences": [
+      {
+        "cn": "我觉得中文很有意思。",
+        "pinyin": "wǒ jué de zhōng wén hěn yǒu yì si.",
+        "en": "I think Chinese is interesting."
+      },
+      {
+        "cn": "因为今天很忙，所以我不能去。",
+        "pinyin": "yīn wèi jīn tiān hěn máng, suǒ yǐ wǒ bù néng qù.",
+        "en": "Because I am busy today, I cannot go."
+      },
+      {
+        "cn": "这个问题不难。",
+        "pinyin": "zhè ge wèn tí bù nán.",
+        "en": "This problem is not difficult."
+      }
+    ],
+    "speaking_task": "Say one opinion and explain why."
+  },
+  {
+    "id": "L09",
+    "level": "HSK3 Expansion",
+    "title": "Plans and Changes",
+    "goal": "Talk about plans, changes, and completion.",
+    "terms": [
+      {
+        "text": "计划",
+        "pinyin": "jì huà",
+        "meaning": "plan"
+      },
+      {
+        "text": "准备",
+        "pinyin": "zhǔn bèi",
+        "meaning": "to prepare; plan to"
+      },
+      {
+        "text": "已经",
+        "pinyin": "yǐ jīng",
+        "meaning": "already"
+      },
+      {
+        "text": "还",
+        "pinyin": "hái",
+        "meaning": "still; yet"
+      },
+      {
+        "text": "完成",
+        "pinyin": "wán chéng",
+        "meaning": "to complete"
+      },
+      {
+        "text": "改变",
+        "pinyin": "gǎi biàn",
+        "meaning": "to change"
+      },
+      {
+        "text": "开始",
+        "pinyin": "kāi shǐ",
+        "meaning": "to start"
+      },
+      {
+        "text": "结束",
+        "pinyin": "jié shù",
+        "meaning": "to end"
+      },
+      {
+        "text": "以前",
+        "pinyin": "yǐ qián",
+        "meaning": "before"
+      },
+      {
+        "text": "以后",
+        "pinyin": "yǐ hòu",
+        "meaning": "after; later"
+      }
+    ],
+    "sentences": [
+      {
+        "cn": "我准备下个月去中国。",
+        "pinyin": "wǒ zhǔn bèi xià gè yuè qù zhōng guó.",
+        "en": "I plan to go to China next month."
+      },
+      {
+        "cn": "会议已经开始了。",
+        "pinyin": "huì yì yǐ jīng kāi shǐ le.",
+        "en": "The meeting has already started."
+      },
+      {
+        "cn": "我们需要改变计划。",
+        "pinyin": "wǒ men xū yào gǎi biàn jì huà.",
+        "en": "We need to change the plan."
+      }
+    ],
+    "speaking_task": "Describe one plan for next month."
+  },
+  {
+    "id": "L10",
+    "level": "Business Starter",
+    "title": "Introducing Your Company",
+    "goal": "Introduce your company, role, and department.",
+    "terms": [
+      {
+        "text": "公司",
+        "pinyin": "gōng sī",
+        "meaning": "company"
+      },
+      {
+        "text": "部门",
+        "pinyin": "bù mén",
+        "meaning": "department"
+      },
+      {
+        "text": "职位",
+        "pinyin": "zhí wèi",
+        "meaning": "position"
+      },
+      {
+        "text": "经理",
+        "pinyin": "jīng lǐ",
+        "meaning": "manager"
+      },
+      {
+        "text": "客户",
+        "pinyin": "kè hù",
+        "meaning": "client"
+      },
+      {
+        "text": "产品",
+        "pinyin": "chǎn pǐn",
+        "meaning": "product"
+      },
+      {
+        "text": "市场",
+        "pinyin": "shì chǎng",
+        "meaning": "market"
+      },
+      {
+        "text": "销售",
+        "pinyin": "xiāo shòu",
+        "meaning": "sales"
+      },
+      {
+        "text": "负责",
+        "pinyin": "fù zé",
+        "meaning": "to be responsible for"
+      },
+      {
+        "text": "合作",
+        "pinyin": "hé zuò",
+        "meaning": "cooperation"
+      }
+    ],
+    "sentences": [
+      {
+        "cn": "我在一家美国公司工作。",
+        "pinyin": "wǒ zài yī jiā měi guó gōng sī gōng zuò.",
+        "en": "I work at an American company."
+      },
+      {
+        "cn": "我是销售经理。",
+        "pinyin": "wǒ shì xiāo shòu jīng lǐ.",
+        "en": "I am a sales manager."
+      },
+      {
+        "cn": "我负责中国市场。",
+        "pinyin": "wǒ fù zé zhōng guó shì chǎng.",
+        "en": "I am responsible for the China market."
+      }
+    ],
+    "speaking_task": "Introduce your company and your role in three sentences."
+  },
+  {
+    "id": "L11",
+    "level": "Business Starter",
+    "title": "Meetings and Follow-up",
+    "goal": "Handle basic meeting language.",
+    "terms": [
+      {
+        "text": "会议",
+        "pinyin": "huì yì",
+        "meaning": "meeting"
+      },
+      {
+        "text": "开会",
+        "pinyin": "kāi huì",
+        "meaning": "to have a meeting"
+      },
+      {
+        "text": "时间",
+        "pinyin": "shí jiān",
+        "meaning": "time"
+      },
+      {
+        "text": "地点",
+        "pinyin": "dì diǎn",
+        "meaning": "place"
+      },
+      {
+        "text": "议程",
+        "pinyin": "yì chéng",
+        "meaning": "agenda"
+      },
+      {
+        "text": "确认",
+        "pinyin": "què rèn",
+        "meaning": "to confirm"
+      },
+      {
+        "text": "安排",
+        "pinyin": "ān pái",
+        "meaning": "to arrange"
+      },
+      {
+        "text": "资料",
+        "pinyin": "zī liào",
+        "meaning": "materials"
+      },
+      {
+        "text": "稍后",
+        "pinyin": "shāo hòu",
+        "meaning": "later"
+      },
+      {
+        "text": "回复",
+        "pinyin": "huí fù",
+        "meaning": "to reply"
+      }
+    ],
+    "sentences": [
+      {
+        "cn": "我们明天上午十点开会。",
+        "pinyin": "wǒ men míng tiān shàng wǔ shí diǎn kāi huì.",
+        "en": "We will have a meeting tomorrow at 10 a.m."
+      },
+      {
+        "cn": "请确认会议时间。",
+        "pinyin": "qǐng què rèn huì yì shí jiān.",
+        "en": "Please confirm the meeting time."
+      },
+      {
+        "cn": "我稍后回复你。",
+        "pinyin": "wǒ shāo hòu huí fù nǐ.",
+        "en": "I will reply to you later."
+      }
+    ],
+    "speaking_task": "Confirm a meeting time and say you will reply later."
+  },
+  {
+    "id": "L12",
+    "level": "Business Starter",
+    "title": "Prices and Payment",
+    "goal": "Ask about price, discount, and payment.",
+    "terms": [
+      {
+        "text": "价格",
+        "pinyin": "jià gé",
+        "meaning": "price"
+      },
+      {
+        "text": "多少钱",
+        "pinyin": "duō shǎo qián",
+        "meaning": "how much money"
+      },
+      {
+        "text": "折扣",
+        "pinyin": "zhé kòu",
+        "meaning": "discount"
+      },
+      {
+        "text": "合同",
+        "pinyin": "hé tóng",
+        "meaning": "contract"
+      },
+      {
+        "text": "付款",
+        "pinyin": "fù kuǎn",
+        "meaning": "payment"
+      },
+      {
+        "text": "发票",
+        "pinyin": "fā piào",
+        "meaning": "invoice"
+      },
+      {
+        "text": "预算",
+        "pinyin": "yù suàn",
+        "meaning": "budget"
+      },
+      {
+        "text": "成本",
+        "pinyin": "chéng běn",
+        "meaning": "cost"
+      },
+      {
+        "text": "可以",
+        "pinyin": "kě yǐ",
+        "meaning": "can; may"
+      },
+      {
+        "text": "合适",
+        "pinyin": "hé shì",
+        "meaning": "suitable"
+      }
+    ],
+    "sentences": [
+      {
+        "cn": "这个价格合适吗？",
+        "pinyin": "zhè ge jià gé hé shì ma?",
+        "en": "Is this price suitable?"
+      },
+      {
+        "cn": "可以有折扣吗？",
+        "pinyin": "kě yǐ yǒu zhé kòu ma?",
+        "en": "Can there be a discount?"
+      },
+      {
+        "cn": "请把发票发给我。",
+        "pinyin": "qǐng bǎ fā piào fā gěi wǒ.",
+        "en": "Please send me the invoice."
+      }
+    ],
+    "speaking_task": "Ask for the price and one possible discount."
+  }
+]

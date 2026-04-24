@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+.DS_Store
+*.pyc
+data/raw/cedict_1_0_ts_utf-8_mdbg.txt.gz
+data/raw/cedict_ts.u8
