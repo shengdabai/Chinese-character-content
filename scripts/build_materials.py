@@ -96,6 +96,89 @@ PRODUCT_PACKS = [
 ]
 
 
+FOUR_WEEK_PLAN = [
+    {
+        "week": "Week 1",
+        "theme": "Survival Speaking",
+        "goals": "Greet people, introduce yourself, say numbers, and ask simple questions.",
+        "daily_routine": "10 minutes character reading, 10 minutes phrase shadowing, 5 minutes self-introduction.",
+        "deliverable": "Record a 30-second self-introduction.",
+    },
+    {
+        "week": "Week 2",
+        "theme": "Daily Life and Travel",
+        "goals": "Order food, ask for directions, use time words, and handle short travel exchanges.",
+        "daily_routine": "Review 20 characters, read 10 phrases aloud, complete one role-play.",
+        "deliverable": "Complete a restaurant or taxi role-play without English notes.",
+    },
+    {
+        "week": "Week 3",
+        "theme": "HSK 1-2 Speaking Bridge",
+        "goals": "Turn core words into short answers about family, work, schedule, and preferences.",
+        "daily_routine": "Read a Top 300 character set, build 5 sentences, answer 3 oral prompts.",
+        "deliverable": "Answer 10 HSK-style personal questions aloud.",
+    },
+    {
+        "week": "Week 4",
+        "theme": "Business Starter",
+        "goals": "Introduce your company, confirm meetings, discuss price and follow-up.",
+        "daily_routine": "Practice one business script, substitute your real company details, record and revise.",
+        "deliverable": "Deliver a 60-second business introduction and meeting follow-up.",
+    },
+]
+
+
+SPEAKING_DRILLS = [
+    ("Introduce yourself", "你好，我叫 __。我是 __。", "Hello, my name is __. I am __.", "Replace name, country, job."),
+    ("Ask someone's name", "你叫什么名字？", "What is your name?", "Ask, listen, and answer."),
+    ("Say your country", "我是 __ 人。", "I am from __.", "Use 美国/英国/西班牙/中国."),
+    ("Say what you speak", "我会说一点中文。", "I can speak a little Chinese.", "Change 中文 to 英文."),
+    ("Ask for time", "现在几点？", "What time is it now?", "Answer with __ 点."),
+    ("Order tea", "我要一杯茶。", "I would like a cup of tea.", "Change tea to water or coffee."),
+    ("Ask for directions", "请问，地铁站怎么走？", "Excuse me, how do I get to the subway station?", "Change destination."),
+    ("Confirm a meeting", "请确认会议时间。", "Please confirm the meeting time.", "Add tomorrow or afternoon."),
+    ("Reply later", "我稍后回复你。", "I will reply to you later.", "Use in a business chat."),
+    ("Ask for price", "这个多少钱？", "How much is this?", "Change this to product/service."),
+    ("Ask for discount", "可以有折扣吗？", "Can there be a discount?", "Practice polite tone."),
+    ("Give an opinion", "我觉得这个很好。", "I think this is very good.", "Change adjective."),
+    ("Give a reason", "因为今天很忙，所以我不能去。", "Because I am busy today, I cannot go.", "Change reason."),
+    ("Change a plan", "我们需要改变计划。", "We need to change the plan.", "Add time or reason."),
+    ("Introduce role", "我负责中国市场。", "I am responsible for the China market.", "Change market/department."),
+]
+
+
+BUSINESS_PHRASES = [
+    ("Self-introduction", "我是销售经理。", "I am a sales manager.", "wǒ shì xiāo shòu jīng lǐ"),
+    ("Company", "我在一家美国公司工作。", "I work at an American company.", "wǒ zài yì jiā měi guó gōng sī gōng zuò"),
+    ("Responsibility", "我负责中国市场。", "I am responsible for the China market.", "wǒ fù zé zhōng guó shì chǎng"),
+    ("Meeting time", "我们明天上午十点开会。", "We will meet tomorrow at 10 a.m.", "wǒ men míng tiān shàng wǔ shí diǎn kāi huì"),
+    ("Confirmation", "请确认会议时间。", "Please confirm the meeting time.", "qǐng què rèn huì yì shí jiān"),
+    ("Materials", "我把资料发给你。", "I will send you the materials.", "wǒ bǎ zī liào fā gěi nǐ"),
+    ("Follow-up", "我稍后回复你。", "I will reply to you later.", "wǒ shāo hòu huí fù nǐ"),
+    ("Invoice", "请把发票发给我。", "Please send me the invoice.", "qǐng bǎ fā piào fā gěi wǒ"),
+    ("Payment", "什么时候付款？", "When is the payment?", "shén me shí hou fù kuǎn"),
+    ("Price", "这个价格合适吗？", "Is this price suitable?", "zhè ge jià gé hé shì ma"),
+    ("Discount", "可以有折扣吗？", "Can there be a discount?", "kě yǐ yǒu zhé kòu ma"),
+    ("Contract", "我们需要看合同。", "We need to review the contract.", "wǒ men xū yào kàn hé tóng"),
+]
+
+
+PLACEMENT_CHECKLIST = [
+    ("Beginner", "Can greet someone and say your name.", "Say: 你好，我叫 __。"),
+    ("Beginner", "Can read numbers 1-10.", "Read a phone number aloud."),
+    ("Beginner", "Can say your country and language.", "我是 __ 人。我会说 __。"),
+    ("HSK1", "Can answer basic personal questions.", "Answer: 你叫什么名字？你是哪国人？"),
+    ("HSK1", "Can use time words.", "Say what you will do tomorrow morning."),
+    ("HSK2", "Can order food and drink.", "Order one drink and one food item."),
+    ("HSK2", "Can ask for directions.", "Ask how to get to a hotel or subway station."),
+    ("HSK3", "Can give a short opinion.", "Use 我觉得...因为..."),
+    ("HSK3", "Can explain a plan.", "Say one plan for next month."),
+    ("Business Starter", "Can introduce company and role.", "Say company, title, and responsibility."),
+    ("Business Starter", "Can confirm a meeting.", "Confirm time and follow-up."),
+    ("Business Starter", "Can ask about price/payment.", "Ask about price, discount, invoice, or payment."),
+]
+
+
 LOOKUP_CATEGORIES = {
     "People & Pronouns": set("我你他她它人们子女父母爸妈先老友同"),
     "Numbers & Measures": set("一二三四五六七八九十百千万亿个只本些第半两"),
@@ -838,9 +921,67 @@ def export_data(master: pd.DataFrame, lessons: list[dict[str, object]]) -> None:
         lesson_terms,
         ["lesson_id", "level", "lesson_title", "text", "pinyin", "meaning"],
     )
+    write_csv(
+        PROCESSED / "four_week_plan.csv",
+        FOUR_WEEK_PLAN,
+        ["week", "theme", "goals", "daily_routine", "deliverable"],
+    )
+    write_csv(
+        PROCESSED / "speaking_drill_cards.csv",
+        [
+            {"prompt": prompt, "chinese": chinese, "english": english, "variation": variation, "pinyin": sentence_pinyin(chinese)}
+            for prompt, chinese, english, variation in SPEAKING_DRILLS
+        ],
+        ["prompt", "chinese", "pinyin", "english", "variation"],
+    )
+    write_csv(
+        PROCESSED / "business_phrasebook.csv",
+        [
+            {"scenario": scenario, "chinese": chinese, "pinyin": pinyin, "english": english}
+            for scenario, chinese, english, pinyin in BUSINESS_PHRASES
+        ],
+        ["scenario", "chinese", "pinyin", "english"],
+    )
+    write_csv(
+        PROCESSED / "placement_checklist.csv",
+        [
+            {"level": level, "can_do": can_do, "test_prompt": test_prompt}
+            for level, can_do, test_prompt in PLACEMENT_CHECKLIST
+        ],
+        ["level", "can_do", "test_prompt"],
+    )
+    anki = learning.sort_values("frequency_rank", na_position="last").head(600).copy()
+    anki_rows = [
+        {
+            "front": row.character,
+            "back": f"{row.pinyin}<br>{str(row.definition_en)[:180]}<br><small>{row.example_words}</small>",
+            "tags": row.learning_band.replace(" ", "_").lower(),
+        }
+        for row in anki.itertuples()
+    ]
+    write_csv(PROCESSED / "anki_top_600.csv", anki_rows, ["front", "back", "tags"])
     (CONTENT / "lessons.json").write_text(json.dumps(lessons, ensure_ascii=False, indent=2), encoding="utf-8")
     (CONTENT / "product_packs.json").write_text(
         json.dumps([pack.__dict__ for pack in PRODUCT_PACKS], ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    companion = {
+        "four_week_plan": FOUR_WEEK_PLAN,
+        "speaking_drills": [
+            {"prompt": prompt, "chinese": chinese, "pinyin": sentence_pinyin(chinese), "english": english, "variation": variation}
+            for prompt, chinese, english, variation in SPEAKING_DRILLS
+        ],
+        "business_phrases": [
+            {"scenario": scenario, "chinese": chinese, "pinyin": pinyin, "english": english}
+            for scenario, chinese, english, pinyin in BUSINESS_PHRASES
+        ],
+        "placement_checklist": [
+            {"level": level, "can_do": can_do, "test_prompt": test_prompt}
+            for level, can_do, test_prompt in PLACEMENT_CHECKLIST
+        ],
+    }
+    (CONTENT / "learning_materials_companion.json").write_text(
+        json.dumps(companion, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
 
@@ -1064,6 +1205,64 @@ def build_product_packs_pdf() -> None:
     doc.build(story)
 
 
+def build_learning_materials_pdf() -> None:
+    register_pdf_fonts()
+    st = styles()
+    doc = SimpleDocTemplate(
+        str(PDF / "Learning_Materials_Companion.pdf"),
+        pagesize=A4,
+        rightMargin=14 * mm,
+        leftMargin=14 * mm,
+        topMargin=14 * mm,
+        bottomMargin=14 * mm,
+        title="Learning Materials Companion",
+    )
+    story: list[object] = [
+        p("Learning Materials Companion", st["title"]),
+        p("Teacher-ready and learner-ready documents for using the character data as a short speaking course.", st["body"]),
+        Spacer(1, 5 * mm),
+        p("Teacher Guide", st["h1"]),
+        p("Use each lesson as a 30-45 minute session: warm-up with 5 characters, model pronunciation, drill sentence patterns, run pair practice, then record a short speaking task. Do not require handwriting in this version; the learning goal is recognition, pronunciation, and usable speech.", st["body"]),
+        p("Learner Guide", st["h1"]),
+        p("Study in short daily sessions. Read the Chinese aloud, cover the English, speak the sentence from memory, then replace one word with your own information. Use the 3500 Finder when you meet an unknown character.", st["body"]),
+        p("4-Week Learning Plan", st["h1"]),
+    ]
+    add_table(
+        story,
+        [["Week", "Theme", "Goals", "Daily Routine", "Deliverable"]]
+        + [[item["week"], item["theme"], item["goals"], item["daily_routine"], item["deliverable"]] for item in FOUR_WEEK_PLAN],
+        [17 * mm, 32 * mm, 44 * mm, 48 * mm, 35 * mm],
+        st["small"],
+    )
+    story.append(PageBreak())
+    story.append(p("Speaking Drill Cards", st["h1"]))
+    add_table(
+        story,
+        [["Prompt", "Chinese", "Pinyin", "English", "Variation"]]
+        + [[prompt, chinese, sentence_pinyin(chinese), english, variation] for prompt, chinese, english, variation in SPEAKING_DRILLS],
+        [34 * mm, 39 * mm, 38 * mm, 42 * mm, 25 * mm],
+        st["small"],
+    )
+    story.append(PageBreak())
+    story.append(p("Business Phrasebook", st["h1"]))
+    add_table(
+        story,
+        [["Scenario", "Chinese", "Pinyin", "English"]]
+        + [[scenario, chinese, pinyin, english] for scenario, chinese, english, pinyin in BUSINESS_PHRASES],
+        [35 * mm, 48 * mm, 55 * mm, 40 * mm],
+        st["small"],
+    )
+    story.append(p("Placement Checklist", st["h1"]))
+    add_table(
+        story,
+        [["Level", "Can-do Statement", "Test Prompt"]]
+        + [[level, can_do, test_prompt] for level, can_do, test_prompt in PLACEMENT_CHECKLIST],
+        [30 * mm, 82 * mm, 64 * mm],
+        st["small"],
+    )
+    doc.build(story)
+
+
 def html_page(title: str, body: str) -> str:
     return f"""<!doctype html>
 <html lang="en">
@@ -1080,6 +1279,7 @@ def html_page(title: str, body: str) -> str:
       <a href="index.html#lessons">Lessons</a>
       <a href="characters.html">Top 600</a>
       <a href="common-3500.html">3500 Finder</a>
+      <a href="materials.html">Materials</a>
       <a href="packs.html">Packs</a>
       <a href="downloads.html">Downloads</a>
     </nav>
@@ -1297,6 +1497,7 @@ tbody tr:nth-child(even) { background: #f8fafb; }
         <section class="tile"><h3>3500 Character Finder</h3><p>A pinyin-first quick reference for foreign learners, with English meanings, frequency ranks, and learner-friendly categories.</p></section>
         <section class="tile"><h3>Business Trip Kit</h3><p>A workplace-focused learning pack for introductions, meetings, follow-up messages, prices, and payment.</p></section>
         <section class="tile"><h3>HSK Speaking Bridge</h3><p>Exam-oriented foundations turned into spoken sentence patterns and short oral tasks.</p></section>
+        <section class="tile"><h3>Teacher-Ready Materials</h3><p>4-week plan, speaking drill cards, placement checklist, business phrasebook, and Anki/Quizlet CSV exports.</p></section>
       </div>
     </section>
     <section>
@@ -1460,6 +1661,49 @@ tbody tr:nth-child(even) { background: #f8fafb; }
 """
     (SITE / "packs.html").write_text(html_page("Productized Learning Packs", packs_body), encoding="utf-8")
 
+    plan_rows = "\n".join(
+        f"<tr><td>{html.escape(item['week'])}</td><td>{html.escape(item['theme'])}</td><td>{html.escape(item['goals'])}</td><td>{html.escape(item['daily_routine'])}</td><td>{html.escape(item['deliverable'])}</td></tr>"
+        for item in FOUR_WEEK_PLAN
+    )
+    drill_rows = "\n".join(
+        f"<tr><td>{html.escape(prompt)}</td><td class='han'>{html.escape(chinese)}</td><td>{html.escape(sentence_pinyin(chinese))}</td><td>{html.escape(english)}</td><td>{html.escape(variation)}</td></tr>"
+        for prompt, chinese, english, variation in SPEAKING_DRILLS
+    )
+    business_rows = "\n".join(
+        f"<tr><td>{html.escape(scenario)}</td><td class='han'>{html.escape(chinese)}</td><td>{html.escape(pinyin)}</td><td>{html.escape(english)}</td></tr>"
+        for scenario, chinese, english, pinyin in BUSINESS_PHRASES
+    )
+    placement_rows = "\n".join(
+        f"<tr><td>{html.escape(level)}</td><td>{html.escape(can_do)}</td><td>{html.escape(test_prompt)}</td></tr>"
+        for level, can_do, test_prompt in PLACEMENT_CHECKLIST
+    )
+    materials_body = f"""
+    <h1>Learning Materials</h1>
+    <p class="lead">Teacher-ready and learner-ready companion materials built around speaking practice, HSK 1-3 foundations, and business starter use cases.</p>
+    <section class="grid">
+      <article class="tile"><h3>Teacher Guide</h3><p>Run each lesson as a 30-45 minute class: character warm-up, pronunciation model, sentence substitution, pair role-play, and one recorded speaking task.</p></article>
+      <article class="tile"><h3>Learner Guide</h3><p>Study in short daily sessions: read aloud, cover English, speak from memory, then substitute your own name, country, job, time, or company.</p></article>
+      <article class="tile"><h3>Assessment</h3><p>Use the placement checklist to decide whether a learner should start at Zero Beginner, HSK1, HSK2, HSK3, or Business Starter.</p></article>
+    </section>
+    <section>
+      <h2>4-Week Learning Plan</h2>
+      <table><thead><tr><th>Week</th><th>Theme</th><th>Goals</th><th>Daily Routine</th><th>Deliverable</th></tr></thead><tbody>{plan_rows}</tbody></table>
+    </section>
+    <section>
+      <h2>Speaking Drill Cards</h2>
+      <table><thead><tr><th>Prompt</th><th>Chinese</th><th>Pinyin</th><th>English</th><th>Variation</th></tr></thead><tbody>{drill_rows}</tbody></table>
+    </section>
+    <section>
+      <h2>Business Phrasebook</h2>
+      <table><thead><tr><th>Scenario</th><th>Chinese</th><th>Pinyin</th><th>English</th></tr></thead><tbody>{business_rows}</tbody></table>
+    </section>
+    <section>
+      <h2>Placement Checklist</h2>
+      <table><thead><tr><th>Level</th><th>Can-do Statement</th><th>Test Prompt</th></tr></thead><tbody>{placement_rows}</tbody></table>
+    </section>
+"""
+    (SITE / "materials.html").write_text(html_page("Learning Materials", materials_body), encoding="utf-8")
+
     files_root = SITE / "files"
     for folder in [files_root / "pdf", files_root / "data", files_root / "content"]:
         folder.mkdir(parents=True, exist_ok=True)
@@ -1469,6 +1713,7 @@ tbody tr:nth-child(even) { background: #f8fafb; }
         shutil.copy2(source, files_root / "data" / source.name)
     shutil.copy2(CONTENT / "lessons.json", files_root / "content" / "lessons.json")
     shutil.copy2(CONTENT / "product_packs.json", files_root / "content" / "product_packs.json")
+    shutil.copy2(CONTENT / "learning_materials_companion.json", files_root / "content" / "learning_materials_companion.json")
 
     downloads_body = """
     <h1>Downloads</h1>
@@ -1478,14 +1723,21 @@ tbody tr:nth-child(even) { background: #f8fafb; }
       <a href="files/pdf/Master_Character_List_Top_600.pdf">Master Character List Top 600</a>
       <a href="files/pdf/Common_3500_Character_Quick_Reference.pdf">Common 3500 Character Quick Reference</a>
       <a href="files/pdf/Sellable_Learning_Packs.pdf">Sellable Learning Packs</a>
+      <a href="files/pdf/Learning_Materials_Companion.pdf">Learning Materials Companion</a>
       <h2>Data</h2>
       <a href="files/data/characters_master.csv">Characters master CSV</a>
       <a href="files/data/learning_characters.csv">Learning characters CSV</a>
       <a href="files/data/lesson_vocabulary.csv">Lesson vocabulary CSV</a>
       <a href="files/data/common_3500_quick_reference.csv">Common 3500 quick reference CSV</a>
       <a href="files/data/common_3500_by_category.csv">Common 3500 by category CSV</a>
+      <a href="files/data/four_week_plan.csv">4-week learning plan CSV</a>
+      <a href="files/data/speaking_drill_cards.csv">Speaking drill cards CSV</a>
+      <a href="files/data/business_phrasebook.csv">Business phrasebook CSV</a>
+      <a href="files/data/placement_checklist.csv">Placement checklist CSV</a>
+      <a href="files/data/anki_top_600.csv">Anki / Quizlet top 600 CSV</a>
       <a href="files/content/lessons.json">Lessons JSON</a>
       <a href="files/content/product_packs.json">Product packs JSON</a>
+      <a href="files/content/learning_materials_companion.json">Learning materials companion JSON</a>
       <h2>Attribution</h2>
       <p>English definitions are derived from CC-CEDICT via MDBG and are shared under CC BY-SA 4.0 attribution-sharealike terms.</p>
       <a href="https://www.mdbg.net/chinese/dictionary?page=cc-cedict">CC-CEDICT at MDBG</a>
@@ -1512,15 +1764,23 @@ def write_summary(master: pd.DataFrame, lessons: list[dict[str, object]]) -> Non
             "data/processed/lesson_vocabulary.csv",
             "data/processed/common_3500_quick_reference.csv",
             "data/processed/common_3500_by_category.csv",
+            "data/processed/four_week_plan.csv",
+            "data/processed/speaking_drill_cards.csv",
+            "data/processed/business_phrasebook.csv",
+            "data/processed/placement_checklist.csv",
+            "data/processed/anki_top_600.csv",
             "content/lessons.json",
             "content/product_packs.json",
+            "content/learning_materials_companion.json",
             "pdf/Chinese_Character_Content_Study_Pack.pdf",
             "pdf/Master_Character_List_Top_600.pdf",
             "pdf/Common_3500_Character_Quick_Reference.pdf",
             "pdf/Sellable_Learning_Packs.pdf",
+            "pdf/Learning_Materials_Companion.pdf",
             "docs/index.html",
             "docs/common-3500.html",
             "docs/packs.html",
+            "docs/materials.html",
         ],
     }
     (PROCESSED / "build_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
@@ -1538,6 +1798,7 @@ def main() -> None:
     build_character_pdf(master)
     build_common_3500_pdf(master)
     build_product_packs_pdf()
+    build_learning_materials_pdf()
     build_site(master, lessons)
     write_summary(master, lessons)
     print(f"Done. Merged {len(master):,} characters and built {len(lessons)} lessons.")

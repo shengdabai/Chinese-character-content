@@ -10,10 +10,12 @@ Static learning materials for English-speaking beginners, HSK 1-3 learners, and 
 - `data/processed/common_3500_by_category.csv`: the same 3500 characters grouped by learner-friendly categories.
 - `content/lessons.json`: speaking-first lesson content.
 - `content/product_packs.json`: productized learning pack ideas and positioning.
+- `content/learning_materials_companion.json`: teacher guide, learner guide, 4-week plan, drill cards, business phrases, and placement checklist.
 - `pdf/Chinese_Character_Content_Study_Pack.pdf`: printable study pack.
 - `pdf/Master_Character_List_Top_600.pdf`: printable top-600 character reference.
 - `pdf/Common_3500_Character_Quick_Reference.pdf`: pinyin-first 3500-character quick lookup PDF.
 - `pdf/Sellable_Learning_Packs.pdf`: sellable content-pack positioning sheet.
+- `pdf/Learning_Materials_Companion.pdf`: teacher-ready and learner-ready companion materials.
 - `docs/index.html`: GitHub Pages static website.
 
 ## Build

@@ -1,0 +1,16 @@
+﻿prompt,chinese,pinyin,english,variation
+Introduce yourself,你好，我叫 __。我是 __。,"nǐ hǎo, wǒ jiào __. wǒ shì __.","Hello, my name is __. I am __.","Replace name, country, job."
+Ask someone's name,你叫什么名字？,nǐ jiào shén me míng zì?,What is your name?,"Ask, listen, and answer."
+Say your country,我是 __ 人。,wǒ shì __ rén.,I am from __.,Use 美国/英国/西班牙/中国.
+Say what you speak,我会说一点中文。,wǒ huì shuō yì diǎn zhōng wén.,I can speak a little Chinese.,Change 中文 to 英文.
+Ask for time,现在几点？,xiàn zài jǐ diǎn?,What time is it now?,Answer with __ 点.
+Order tea,我要一杯茶。,wǒ yào yī bēi chá.,I would like a cup of tea.,Change tea to water or coffee.
+Ask for directions,请问，地铁站怎么走？,"qǐng wèn, dì tiě zhàn zěn me zǒu?","Excuse me, how do I get to the subway station?",Change destination.
+Confirm a meeting,请确认会议时间。,qǐng què rèn huì yì shí jiān.,Please confirm the meeting time.,Add tomorrow or afternoon.
+Reply later,我稍后回复你。,wǒ shāo hòu huí fù nǐ.,I will reply to you later.,Use in a business chat.
+Ask for price,这个多少钱？,zhè ge duō shǎo qián?,How much is this?,Change this to product/service.
+Ask for discount,可以有折扣吗？,kě yǐ yǒu zhé kòu ma?,Can there be a discount?,Practice polite tone.
+Give an opinion,我觉得这个很好。,wǒ jué de zhè ge hěn hǎo.,I think this is very good.,Change adjective.
+Give a reason,因为今天很忙，所以我不能去。,"yīn wèi jīn tiān hěn máng, suǒ yǐ wǒ bù néng qù.","Because I am busy today, I cannot go.",Change reason.
+Change a plan,我们需要改变计划。,wǒ men xū yào gǎi biàn jì huà.,We need to change the plan.,Add time or reason.
+Introduce role,我负责中国市场。,wǒ fù zé zhōng guó shì chǎng.,I am responsible for the China market.,Change market/department.

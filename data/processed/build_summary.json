@@ -14,14 +14,22 @@
     "data/processed/lesson_vocabulary.csv",
     "data/processed/common_3500_quick_reference.csv",
     "data/processed/common_3500_by_category.csv",
+    "data/processed/four_week_plan.csv",
+    "data/processed/speaking_drill_cards.csv",
+    "data/processed/business_phrasebook.csv",
+    "data/processed/placement_checklist.csv",
+    "data/processed/anki_top_600.csv",
     "content/lessons.json",
     "content/product_packs.json",
+    "content/learning_materials_companion.json",
     "pdf/Chinese_Character_Content_Study_Pack.pdf",
     "pdf/Master_Character_List_Top_600.pdf",
     "pdf/Common_3500_Character_Quick_Reference.pdf",
     "pdf/Sellable_Learning_Packs.pdf",
+    "pdf/Learning_Materials_Companion.pdf",
     "docs/index.html",
     "docs/common-3500.html",
-    "docs/packs.html"
+    "docs/packs.html",
+    "docs/materials.html"
   ]
 }

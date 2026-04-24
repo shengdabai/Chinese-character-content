@@ -1,0 +1,13 @@
+﻿level,can_do,test_prompt
+Beginner,Can greet someone and say your name.,Say: 你好，我叫 __。
+Beginner,Can read numbers 1-10.,Read a phone number aloud.
+Beginner,Can say your country and language.,我是 __ 人。我会说 __。
+HSK1,Can answer basic personal questions.,Answer: 你叫什么名字？你是哪国人？
+HSK1,Can use time words.,Say what you will do tomorrow morning.
+HSK2,Can order food and drink.,Order one drink and one food item.
+HSK2,Can ask for directions.,Ask how to get to a hotel or subway station.
+HSK3,Can give a short opinion.,Use 我觉得...因为...
+HSK3,Can explain a plan.,Say one plan for next month.
+Business Starter,Can introduce company and role.,"Say company, title, and responsibility."
+Business Starter,Can confirm a meeting.,Confirm time and follow-up.
+Business Starter,Can ask about price/payment.,"Ask about price, discount, invoice, or payment."

@@ -1,0 +1,275 @@
+{
+  "four_week_plan": [
+    {
+      "week": "Week 1",
+      "theme": "Survival Speaking",
+      "goals": "Greet people, introduce yourself, say numbers, and ask simple questions.",
+      "daily_routine": "10 minutes character reading, 10 minutes phrase shadowing, 5 minutes self-introduction.",
+      "deliverable": "Record a 30-second self-introduction."
+    },
+    {
+      "week": "Week 2",
+      "theme": "Daily Life and Travel",
+      "goals": "Order food, ask for directions, use time words, and handle short travel exchanges.",
+      "daily_routine": "Review 20 characters, read 10 phrases aloud, complete one role-play.",
+      "deliverable": "Complete a restaurant or taxi role-play without English notes."
+    },
+    {
+      "week": "Week 3",
+      "theme": "HSK 1-2 Speaking Bridge",
+      "goals": "Turn core words into short answers about family, work, schedule, and preferences.",
+      "daily_routine": "Read a Top 300 character set, build 5 sentences, answer 3 oral prompts.",
+      "deliverable": "Answer 10 HSK-style personal questions aloud."
+    },
+    {
+      "week": "Week 4",
+      "theme": "Business Starter",
+      "goals": "Introduce your company, confirm meetings, discuss price and follow-up.",
+      "daily_routine": "Practice one business script, substitute your real company details, record and revise.",
+      "deliverable": "Deliver a 60-second business introduction and meeting follow-up."
+    }
+  ],
+  "speaking_drills": [
+    {
+      "prompt": "Introduce yourself",
+      "chinese": "你好，我叫 __。我是 __。",
+      "pinyin": "nǐ hǎo, wǒ jiào __. wǒ shì __.",
+      "english": "Hello, my name is __. I am __.",
+      "variation": "Replace name, country, job."
+    },
+    {
+      "prompt": "Ask someone's name",
+      "chinese": "你叫什么名字？",
+      "pinyin": "nǐ jiào shén me míng zì?",
+      "english": "What is your name?",
+      "variation": "Ask, listen, and answer."
+    },
+    {
+      "prompt": "Say your country",
+      "chinese": "我是 __ 人。",
+      "pinyin": "wǒ shì __ rén.",
+      "english": "I am from __.",
+      "variation": "Use 美国/英国/西班牙/中国."
+    },
+    {
+      "prompt": "Say what you speak",
+      "chinese": "我会说一点中文。",
+      "pinyin": "wǒ huì shuō yì diǎn zhōng wén.",
+      "english": "I can speak a little Chinese.",
+      "variation": "Change 中文 to 英文."
+    },
+    {
+      "prompt": "Ask for time",
+      "chinese": "现在几点？",
+      "pinyin": "xiàn zài jǐ diǎn?",
+      "english": "What time is it now?",
+      "variation": "Answer with __ 点."
+    },
+    {
+      "prompt": "Order tea",
+      "chinese": "我要一杯茶。",
+      "pinyin": "wǒ yào yī bēi chá.",
+      "english": "I would like a cup of tea.",
+      "variation": "Change tea to water or coffee."
+    },
+    {
+      "prompt": "Ask for directions",
+      "chinese": "请问，地铁站怎么走？",
+      "pinyin": "qǐng wèn, dì tiě zhàn zěn me zǒu?",
+      "english": "Excuse me, how do I get to the subway station?",
+      "variation": "Change destination."
+    },
+    {
+      "prompt": "Confirm a meeting",
+      "chinese": "请确认会议时间。",
+      "pinyin": "qǐng què rèn huì yì shí jiān.",
+      "english": "Please confirm the meeting time.",
+      "variation": "Add tomorrow or afternoon."
+    },
+    {
+      "prompt": "Reply later",
+      "chinese": "我稍后回复你。",
+      "pinyin": "wǒ shāo hòu huí fù nǐ.",
+      "english": "I will reply to you later.",
+      "variation": "Use in a business chat."
+    },
+    {
+      "prompt": "Ask for price",
+      "chinese": "这个多少钱？",
+      "pinyin": "zhè ge duō shǎo qián?",
+      "english": "How much is this?",
+      "variation": "Change this to product/service."
+    },
+    {
+      "prompt": "Ask for discount",
+      "chinese": "可以有折扣吗？",
+      "pinyin": "kě yǐ yǒu zhé kòu ma?",
+      "english": "Can there be a discount?",
+      "variation": "Practice polite tone."
+    },
+    {
+      "prompt": "Give an opinion",
+      "chinese": "我觉得这个很好。",
+      "pinyin": "wǒ jué de zhè ge hěn hǎo.",
+      "english": "I think this is very good.",
+      "variation": "Change adjective."
+    },
+    {
+      "prompt": "Give a reason",
+      "chinese": "因为今天很忙，所以我不能去。",
+      "pinyin": "yīn wèi jīn tiān hěn máng, suǒ yǐ wǒ bù néng qù.",
+      "english": "Because I am busy today, I cannot go.",
+      "variation": "Change reason."
+    },
+    {
+      "prompt": "Change a plan",
+      "chinese": "我们需要改变计划。",
+      "pinyin": "wǒ men xū yào gǎi biàn jì huà.",
+      "english": "We need to change the plan.",
+      "variation": "Add time or reason."
+    },
+    {
+      "prompt": "Introduce role",
+      "chinese": "我负责中国市场。",
+      "pinyin": "wǒ fù zé zhōng guó shì chǎng.",
+      "english": "I am responsible for the China market.",
+      "variation": "Change market/department."
+    }
+  ],
+  "business_phrases": [
+    {
+      "scenario": "Self-introduction",
+      "chinese": "我是销售经理。",
+      "pinyin": "wǒ shì xiāo shòu jīng lǐ",
+      "english": "I am a sales manager."
+    },
+    {
+      "scenario": "Company",
+      "chinese": "我在一家美国公司工作。",
+      "pinyin": "wǒ zài yì jiā měi guó gōng sī gōng zuò",
+      "english": "I work at an American company."
+    },
+    {
+      "scenario": "Responsibility",
+      "chinese": "我负责中国市场。",
+      "pinyin": "wǒ fù zé zhōng guó shì chǎng",
+      "english": "I am responsible for the China market."
+    },
+    {
+      "scenario": "Meeting time",
+      "chinese": "我们明天上午十点开会。",
+      "pinyin": "wǒ men míng tiān shàng wǔ shí diǎn kāi huì",
+      "english": "We will meet tomorrow at 10 a.m."
+    },
+    {
+      "scenario": "Confirmation",
+      "chinese": "请确认会议时间。",
+      "pinyin": "qǐng què rèn huì yì shí jiān",
+      "english": "Please confirm the meeting time."
+    },
+    {
+      "scenario": "Materials",
+      "chinese": "我把资料发给你。",
+      "pinyin": "wǒ bǎ zī liào fā gěi nǐ",
+      "english": "I will send you the materials."
+    },
+    {
+      "scenario": "Follow-up",
+      "chinese": "我稍后回复你。",
+      "pinyin": "wǒ shāo hòu huí fù nǐ",
+      "english": "I will reply to you later."
+    },
+    {
+      "scenario": "Invoice",
+      "chinese": "请把发票发给我。",
+      "pinyin": "qǐng bǎ fā piào fā gěi wǒ",
+      "english": "Please send me the invoice."
+    },
+    {
+      "scenario": "Payment",
+      "chinese": "什么时候付款？",
+      "pinyin": "shén me shí hou fù kuǎn",
+      "english": "When is the payment?"
+    },
+    {
+      "scenario": "Price",
+      "chinese": "这个价格合适吗？",
+      "pinyin": "zhè ge jià gé hé shì ma",
+      "english": "Is this price suitable?"
+    },
+    {
+      "scenario": "Discount",
+      "chinese": "可以有折扣吗？",
+      "pinyin": "kě yǐ yǒu zhé kòu ma",
+      "english": "Can there be a discount?"
+    },
+    {
+      "scenario": "Contract",
+      "chinese": "我们需要看合同。",
+      "pinyin": "wǒ men xū yào kàn hé tóng",
+      "english": "We need to review the contract."
+    }
+  ],
+  "placement_checklist": [
+    {
+      "level": "Beginner",
+      "can_do": "Can greet someone and say your name.",
+      "test_prompt": "Say: 你好，我叫 __。"
+    },
+    {
+      "level": "Beginner",
+      "can_do": "Can read numbers 1-10.",
+      "test_prompt": "Read a phone number aloud."
+    },
+    {
+      "level": "Beginner",
+      "can_do": "Can say your country and language.",
+      "test_prompt": "我是 __ 人。我会说 __。"
+    },
+    {
+      "level": "HSK1",
+      "can_do": "Can answer basic personal questions.",
+      "test_prompt": "Answer: 你叫什么名字？你是哪国人？"
+    },
+    {
+      "level": "HSK1",
+      "can_do": "Can use time words.",
+      "test_prompt": "Say what you will do tomorrow morning."
+    },
+    {
+      "level": "HSK2",
+      "can_do": "Can order food and drink.",
+      "test_prompt": "Order one drink and one food item."
+    },
+    {
+      "level": "HSK2",
+      "can_do": "Can ask for directions.",
+      "test_prompt": "Ask how to get to a hotel or subway station."
+    },
+    {
+      "level": "HSK3",
+      "can_do": "Can give a short opinion.",
+      "test_prompt": "Use 我觉得...因为..."
+    },
+    {
+      "level": "HSK3",
+      "can_do": "Can explain a plan.",
+      "test_prompt": "Say one plan for next month."
+    },
+    {
+      "level": "Business Starter",
+      "can_do": "Can introduce company and role.",
+      "test_prompt": "Say company, title, and responsibility."
+    },
+    {
+      "level": "Business Starter",
+      "can_do": "Can confirm a meeting.",
+      "test_prompt": "Confirm time and follow-up."
+    },
+    {
+      "level": "Business Starter",
+      "can_do": "Can ask about price/payment.",
+      "test_prompt": "Ask about price, discount, invoice, or payment."
+    }
+  ]
+}
