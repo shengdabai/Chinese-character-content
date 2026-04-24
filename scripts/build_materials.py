@@ -45,6 +45,68 @@ class Term:
     meaning: str
 
 
+@dataclass(frozen=True)
+class ProductPack:
+    slug: str
+    title: str
+    audience: str
+    promise: str
+    deliverables: tuple[str, ...]
+    sample_topics: tuple[str, ...]
+    why_it_sells: str
+
+
+PRODUCT_PACKS = [
+    ProductPack(
+        slug="speak-in-7-days",
+        title="Speak in 7 Days: Survival Mandarin",
+        audience="Busy zero beginners who need useful spoken Chinese fast.",
+        promise="A compact first-week path from greetings to ordering, directions, and basic self-introduction.",
+        deliverables=("7 short lessons", "one-page phrase sheets", "daily speaking task", "top 100 character companion"),
+        sample_topics=("names", "numbers", "food", "transport", "countries", "time", "help requests"),
+        why_it_sells="It gives beginners a clear win in one week instead of starting with abstract character memorization.",
+    ),
+    ProductPack(
+        slug="business-trip-kit",
+        title="Business Trip Mandarin Kit",
+        audience="Professionals traveling to China or working with Chinese-speaking partners.",
+        promise="Meeting, taxi, hotel, restaurant, invoice, and follow-up language in one printable kit.",
+        deliverables=("business phrasebook", "meeting scripts", "role-play cards", "invoice/payment vocabulary"),
+        sample_topics=("introductions", "meetings", "schedules", "prices", "payments", "follow-up messages"),
+        why_it_sells="It maps directly to workplace situations where learners feel immediate pressure to speak.",
+    ),
+    ProductPack(
+        slug="hsk-speaking-bridge",
+        title="HSK 1-3 Speaking Bridge",
+        audience="Learners preparing for HSK 1-3 who also want practical spoken fluency.",
+        promise="Turn high-frequency characters and exam vocabulary into short spoken responses.",
+        deliverables=("HSK-inspired lesson sequence", "sentence substitution drills", "oral answer prompts", "top 600 list"),
+        sample_topics=("family", "daily routine", "opinions", "plans", "travel", "shopping"),
+        why_it_sells="Many HSK materials are reading-heavy; this positions the same foundation as a speaking product.",
+    ),
+    ProductPack(
+        slug="3500-character-finder",
+        title="3500 Character Finder for Foreign Learners",
+        audience="Self-learners, teachers, translators, and curriculum designers.",
+        promise="A fast English/pinyin reference for the 3500 common characters, sorted for lookup and teaching.",
+        deliverables=("3500-character PDF", "CSV reference", "web reference", "category labels", "frequency ranks"),
+        sample_topics=("pinyin lookup", "frequency lookup", "function words", "people", "business", "time"),
+        why_it_sells="It converts a raw Chinese list into a usable foreign-learner reference product.",
+    ),
+]
+
+
+LOOKUP_CATEGORIES = {
+    "People & Pronouns": set("我你他她它人们子女父母爸妈先老友同"),
+    "Numbers & Measures": set("一二三四五六七八九十百千万亿个只本些第半两"),
+    "Time": set("年月日天时分秒早晚昨今明现前后已再"),
+    "Places & Movement": set("上下左右东西南北中里外去来到回出入走路站场店家国"),
+    "Business & Work": set("工公司会商市卖买钱价合客户产销发票付部经理"),
+    "Question & Function": set("吗呢吧的了是不有在和也都就又很更最把被给让从向为"),
+    "Actions": set("说看听读写学做吃喝开关用要想知能会见找问"),
+}
+
+
 LESSONS = [
     {
         "level": "Zero Beginner",
@@ -513,11 +575,56 @@ def assign_band(rank: float | int | None) -> str:
     return "Corpus/General Extension"
 
 
+def frequency_tier(rank: float | int | None) -> str:
+    if pd.isna(rank):
+        return "No corpus rank"
+    rank_int = int(rank)
+    if rank_int <= 100:
+        return "Top 100"
+    if rank_int <= 300:
+        return "Top 300"
+    if rank_int <= 600:
+        return "Top 600"
+    if rank_int <= 1200:
+        return "Top 1200"
+    if rank_int <= 2500:
+        return "Top 2500"
+    return "Top 3500+"
+
+
+def plain_pinyin(text: str) -> str:
+    return " ".join(lazy_pinyin(text, style=Style.NORMAL))
+
+
+def lookup_category(character: str, definition: object) -> str:
+    for category, chars in LOOKUP_CATEGORIES.items():
+        if character in chars:
+            return category
+    definition_text = str(definition).lower()
+    keyword_map = [
+        ("Business & Work", ("company", "business", "market", "money", "price", "work", "sell", "buy", "invoice", "contract")),
+        ("People & Pronouns", ("person", "people", "father", "mother", "friend", "teacher", "student", "child", "son", "daughter")),
+        ("Time", ("time", "day", "month", "year", "hour", "minute", "morning", "evening", "now", "later")),
+        ("Places & Movement", ("place", "go", "come", "return", "road", "station", "city", "country", "inside", "outside")),
+        ("Question & Function", ("particle", "question", "interjection", "negative prefix", "not", "also", "because", "therefore")),
+        ("Actions", ("to ", "do", "make", "speak", "read", "write", "see", "hear", "eat", "drink")),
+        ("Numbers & Measures", ("one", "two", "three", "number", "measure word", "classifier")),
+    ]
+    for category, keywords in keyword_map:
+        if any(keyword in definition_text for keyword in keywords):
+            return category
+    return "General Reference"
+
+
 def enrich_characters(df: pd.DataFrame, cedict_pinyin: dict[str, str], cedict_defs: dict[str, str]) -> pd.DataFrame:
     df = df.copy()
     df["pinyin"] = df["character"].map(lambda char: pinyin_for(char, cedict_pinyin))
+    df["pinyin_plain"] = df["character"].map(plain_pinyin)
+    df["pinyin_initial"] = df["pinyin_plain"].str[:1].str.upper()
     df["definition_en"] = df["character"].map(lambda char: cedict_defs.get(char, ""))
     df["learning_band"] = df["frequency_rank"].map(assign_band)
+    df["frequency_tier"] = df["frequency_rank"].map(frequency_tier)
+    df["lookup_category"] = df.apply(lambda row: lookup_category(row["character"], row["definition_en"]), axis=1)
     df["source"] = df.apply(
         lambda row: ", ".join(
             label
@@ -533,7 +640,11 @@ def enrich_characters(df: pd.DataFrame, cedict_pinyin: dict[str, str], cedict_de
     columns = [
         "character",
         "pinyin",
+        "pinyin_plain",
+        "pinyin_initial",
         "definition_en",
+        "lookup_category",
+        "frequency_tier",
         "learning_band",
         "frequency_rank",
         "token",
@@ -593,6 +704,13 @@ def export_data(master: pd.DataFrame, lessons: list[dict[str, object]]) -> None:
     master.to_csv(PROCESSED / "characters_master.csv", index=False, encoding="utf-8-sig")
     learning = master[master["learning_band"].isin(["Zero Beginner", "HSK1 Core", "HSK2 Expansion", "HSK3 Expansion"])].copy()
     learning.to_csv(PROCESSED / "learning_characters.csv", index=False, encoding="utf-8-sig")
+    common_3500 = master[master["in_3500"]].sort_values(["pinyin_plain", "frequency_rank", "rank_3500"], na_position="last").copy()
+    common_3500.to_csv(PROCESSED / "common_3500_quick_reference.csv", index=False, encoding="utf-8-sig")
+    common_3500.sort_values(["lookup_category", "frequency_rank", "pinyin_plain"], na_position="last").to_csv(
+        PROCESSED / "common_3500_by_category.csv",
+        index=False,
+        encoding="utf-8-sig",
+    )
 
     lesson_terms = []
     for lesson in lessons:
@@ -611,6 +729,10 @@ def export_data(master: pd.DataFrame, lessons: list[dict[str, object]]) -> None:
         ["lesson_id", "level", "lesson_title", "text", "pinyin", "meaning"],
     )
     (CONTENT / "lessons.json").write_text(json.dumps(lessons, ensure_ascii=False, indent=2), encoding="utf-8")
+    (CONTENT / "product_packs.json").write_text(
+        json.dumps([pack.__dict__ for pack in PRODUCT_PACKS], ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
 
 def register_pdf_fonts() -> None:
@@ -767,6 +889,70 @@ def build_character_pdf(master: pd.DataFrame) -> None:
     doc.build(story)
 
 
+def build_common_3500_pdf(master: pd.DataFrame) -> None:
+    register_pdf_fonts()
+    st = styles()
+    doc = SimpleDocTemplate(
+        str(PDF / "Common_3500_Character_Quick_Reference.pdf"),
+        pagesize=A4,
+        rightMargin=10 * mm,
+        leftMargin=10 * mm,
+        topMargin=10 * mm,
+        bottomMargin=10 * mm,
+        title="Common 3500 Character Quick Reference",
+    )
+    common = master[master["in_3500"]].sort_values(["pinyin_plain", "frequency_rank", "rank_3500"], na_position="last")
+    story: list[object] = [
+        p("Common 3500 Character Quick Reference", st["title"]),
+        p("A foreign-learner lookup reference sorted by pinyin. Use browser/PDF search for fast lookup by character, pinyin, or English meaning.", st["body"]),
+        Spacer(1, 4 * mm),
+    ]
+    for initial, group in common.groupby("pinyin_initial", sort=True):
+        story.append(p(str(initial), st["h1"]))
+        rows = [["字", "Pinyin", "English", "Category", "Freq"]] + [
+            [
+                row.character,
+                row.pinyin,
+                str(row.definition_en)[:105],
+                row.lookup_category,
+                "" if pd.isna(row.frequency_rank) else int(row.frequency_rank),
+            ]
+            for row in group.itertuples()
+        ]
+        add_table(story, rows, [12 * mm, 30 * mm, 82 * mm, 36 * mm, 14 * mm], st["small"])
+    doc.build(story)
+
+
+def build_product_packs_pdf() -> None:
+    register_pdf_fonts()
+    st = styles()
+    doc = SimpleDocTemplate(
+        str(PDF / "Sellable_Learning_Packs.pdf"),
+        pagesize=A4,
+        rightMargin=14 * mm,
+        leftMargin=14 * mm,
+        topMargin=14 * mm,
+        bottomMargin=14 * mm,
+        title="Sellable Learning Packs",
+    )
+    story: list[object] = [
+        p("Sellable Learning Packs", st["title"]),
+        p("Product angles built from the same character database, designed for English-speaking learners and practical speaking outcomes.", st["body"]),
+        Spacer(1, 5 * mm),
+    ]
+    for pack in PRODUCT_PACKS:
+        story.append(p(pack.title, st["h1"]))
+        rows = [
+            ["Audience", pack.audience],
+            ["Promise", pack.promise],
+            ["Deliverables", "; ".join(pack.deliverables)],
+            ["Sample topics", "; ".join(pack.sample_topics)],
+            ["Why it sells", pack.why_it_sells],
+        ]
+        add_table(story, rows, [33 * mm, 135 * mm], st["small"])
+    doc.build(story)
+
+
 def html_page(title: str, body: str) -> str:
     return f"""<!doctype html>
 <html lang="en">
@@ -782,6 +968,8 @@ def html_page(title: str, body: str) -> str:
     <nav>
       <a href="index.html#lessons">Lessons</a>
       <a href="characters.html">Top 600</a>
+      <a href="common-3500.html">3500 Finder</a>
+      <a href="packs.html">Packs</a>
       <a href="downloads.html">Downloads</a>
     </nav>
   </header>
@@ -896,6 +1084,27 @@ tbody tr:nth-child(even) { background: #f8fafb; }
 .han { font-size: 20px; font-weight: 720; }
 .task { border-left: 4px solid var(--accent); padding-left: 12px; }
 .downloads a { display: block; margin: 8px 0; color: var(--accent-dark); font-weight: 700; }
+.anchors { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
+.anchors a {
+  min-width: 32px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--accent-dark);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 4px 7px;
+  background: white;
+}
+.badge {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 8px;
+  color: var(--accent-dark);
+  background: var(--band);
+  font-size: 12px;
+}
+.pack-meta { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
 @media (max-width: 760px) {
   .topbar { align-items: flex-start; flex-direction: column; }
   .hero { grid-template-columns: 1fr; }
@@ -934,6 +1143,14 @@ tbody tr:nth-child(even) { background: #f8fafb; }
       </div>
     </section>
     <section>
+      <h2>New Product Angles</h2>
+      <div class="grid">
+        <section class="tile"><h3>3500 Character Finder</h3><p>A pinyin-first quick reference for foreign learners, with English meanings, frequency ranks, and learner-friendly categories.</p></section>
+        <section class="tile"><h3>Business Trip Kit</h3><p>A workplace-focused learning pack for introductions, meetings, follow-up messages, prices, and payment.</p></section>
+        <section class="tile"><h3>HSK Speaking Bridge</h3><p>Exam-oriented foundations turned into spoken sentence patterns and short oral tasks.</p></section>
+      </div>
+    </section>
+    <section>
       <h2>Learning Tracks</h2>
       <div class="grid">{level_tiles}</div>
     </section>
@@ -959,6 +1176,72 @@ tbody tr:nth-child(even) { background: #f8fafb; }
 """
     (SITE / "characters.html").write_text(html_page("Top 600 Characters", char_body), encoding="utf-8")
 
+    common_3500 = master[master["in_3500"]].sort_values(["pinyin_plain", "frequency_rank", "rank_3500"], na_position="last")
+    anchors = "\n".join(
+        f"<a href='#{html.escape(initial)}'>{html.escape(initial)}</a>"
+        for initial in common_3500["pinyin_initial"].dropna().drop_duplicates()
+    )
+    groups = []
+    for initial, group in common_3500.groupby("pinyin_initial", sort=True):
+        rows = "\n".join(
+            f"<tr><td class='han'>{html.escape(row.character)}</td><td>{html.escape(row.pinyin)}</td><td>{html.escape(str(row.definition_en)[:180])}</td><td>{html.escape(row.lookup_category)}</td><td>{'' if pd.isna(row.frequency_rank) else int(row.frequency_rank)}</td><td>{int(row.rank_3500)}</td></tr>"
+            for row in group.itertuples()
+        )
+        groups.append(
+            f"""
+            <section id="{html.escape(initial)}">
+              <h2>{html.escape(initial)}</h2>
+              <table>
+                <thead><tr><th>字</th><th>Pinyin</th><th>English</th><th>Category</th><th>Freq</th><th>3500</th></tr></thead>
+                <tbody>{rows}</tbody>
+              </table>
+            </section>
+            """
+        )
+    common_body = f"""
+    <h1>3500 Character Finder</h1>
+    <p class="lead">A pinyin-first quick reference for foreign learners. Use the browser's find command to search by character, pinyin, English meaning, or category.</p>
+    <div class="anchors">{anchors}</div>
+    {''.join(groups)}
+"""
+    (SITE / "common-3500.html").write_text(html_page("3500 Character Finder", common_body), encoding="utf-8")
+
+    pack_cards = "\n".join(
+        f"""
+        <article class="lesson">
+          <div class="lesson-head"><span>{html.escape(pack.slug)}</span><h3>{html.escape(pack.title)}</h3></div>
+          <p class="goal">{html.escape(pack.promise)}</p>
+          <div class="pack-meta"><span class="badge">{html.escape(pack.audience)}</span></div>
+          <table>
+            <tbody>
+              <tr><th>Deliverables</th><td>{html.escape('; '.join(pack.deliverables))}</td></tr>
+              <tr><th>Sample topics</th><td>{html.escape('; '.join(pack.sample_topics))}</td></tr>
+              <tr><th>Why it sells</th><td>{html.escape(pack.why_it_sells)}</td></tr>
+            </tbody>
+          </table>
+        </article>
+        """
+        for pack in PRODUCT_PACKS
+    )
+    category_counts = master[master["in_3500"]]["lookup_category"].value_counts().sort_index()
+    category_rows = "\n".join(
+        f"<tr><td>{html.escape(category)}</td><td>{count}</td><td>{html.escape(', '.join(master[(master['in_3500']) & (master['lookup_category'] == category)].sort_values('frequency_rank', na_position='last').head(12)['character'].tolist()))}</td></tr>"
+        for category, count in category_counts.items()
+    )
+    packs_body = f"""
+    <h1>Productized Learning Packs</h1>
+    <p class="lead">These are sellable content directions built from the same data foundation: fast speaking wins, workplace utility, HSK support, and a foreign-learner 3500-character reference.</p>
+    <section>{pack_cards}</section>
+    <section>
+      <h2>3500 Character Categories</h2>
+      <table>
+        <thead><tr><th>Category</th><th>Characters</th><th>High-frequency examples</th></tr></thead>
+        <tbody>{category_rows}</tbody>
+      </table>
+    </section>
+"""
+    (SITE / "packs.html").write_text(html_page("Productized Learning Packs", packs_body), encoding="utf-8")
+
     files_root = SITE / "files"
     for folder in [files_root / "pdf", files_root / "data", files_root / "content"]:
         folder.mkdir(parents=True, exist_ok=True)
@@ -967,6 +1250,7 @@ tbody tr:nth-child(even) { background: #f8fafb; }
     for source in PROCESSED.glob("*.csv"):
         shutil.copy2(source, files_root / "data" / source.name)
     shutil.copy2(CONTENT / "lessons.json", files_root / "content" / "lessons.json")
+    shutil.copy2(CONTENT / "product_packs.json", files_root / "content" / "product_packs.json")
 
     downloads_body = """
     <h1>Downloads</h1>
@@ -974,11 +1258,16 @@ tbody tr:nth-child(even) { background: #f8fafb; }
       <h2>PDF</h2>
       <a href="files/pdf/Chinese_Character_Content_Study_Pack.pdf">Chinese Character Content Study Pack</a>
       <a href="files/pdf/Master_Character_List_Top_600.pdf">Master Character List Top 600</a>
+      <a href="files/pdf/Common_3500_Character_Quick_Reference.pdf">Common 3500 Character Quick Reference</a>
+      <a href="files/pdf/Sellable_Learning_Packs.pdf">Sellable Learning Packs</a>
       <h2>Data</h2>
       <a href="files/data/characters_master.csv">Characters master CSV</a>
       <a href="files/data/learning_characters.csv">Learning characters CSV</a>
       <a href="files/data/lesson_vocabulary.csv">Lesson vocabulary CSV</a>
+      <a href="files/data/common_3500_quick_reference.csv">Common 3500 quick reference CSV</a>
+      <a href="files/data/common_3500_by_category.csv">Common 3500 by category CSV</a>
       <a href="files/content/lessons.json">Lessons JSON</a>
+      <a href="files/content/product_packs.json">Product packs JSON</a>
       <h2>Attribution</h2>
       <p>English definitions are derived from CC-CEDICT via MDBG and are shared under CC BY-SA 4.0 attribution-sharealike terms.</p>
       <a href="https://www.mdbg.net/chinese/dictionary?page=cc-cedict">CC-CEDICT at MDBG</a>
@@ -1003,10 +1292,17 @@ def write_summary(master: pd.DataFrame, lessons: list[dict[str, object]]) -> Non
             "data/processed/characters_master.csv",
             "data/processed/learning_characters.csv",
             "data/processed/lesson_vocabulary.csv",
+            "data/processed/common_3500_quick_reference.csv",
+            "data/processed/common_3500_by_category.csv",
             "content/lessons.json",
+            "content/product_packs.json",
             "pdf/Chinese_Character_Content_Study_Pack.pdf",
             "pdf/Master_Character_List_Top_600.pdf",
+            "pdf/Common_3500_Character_Quick_Reference.pdf",
+            "pdf/Sellable_Learning_Packs.pdf",
             "docs/index.html",
+            "docs/common-3500.html",
+            "docs/packs.html",
         ],
     }
     (PROCESSED / "build_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
@@ -1021,6 +1317,8 @@ def main() -> None:
     export_data(master, lessons)
     build_study_pack(lessons)
     build_character_pdf(master)
+    build_common_3500_pdf(master)
+    build_product_packs_pdf()
     build_site(master, lessons)
     write_summary(master, lessons)
     print(f"Done. Merged {len(master):,} characters and built {len(lessons)} lessons.")

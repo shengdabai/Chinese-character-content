@@ -74,6 +74,27 @@ tbody tr:nth-child(even) { background: #f8fafb; }
 .han { font-size: 20px; font-weight: 720; }
 .task { border-left: 4px solid var(--accent); padding-left: 12px; }
 .downloads a { display: block; margin: 8px 0; color: var(--accent-dark); font-weight: 700; }
+.anchors { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
+.anchors a {
+  min-width: 32px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--accent-dark);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 4px 7px;
+  background: white;
+}
+.badge {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 8px;
+  color: var(--accent-dark);
+  background: var(--band);
+  font-size: 12px;
+}
+.pack-meta { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
 @media (max-width: 760px) {
   .topbar { align-items: flex-start; flex-direction: column; }
   .hero { grid-template-columns: 1fr; }

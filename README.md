@@ -6,9 +6,14 @@ Static learning materials for English-speaking beginners, HSK 1-3 learners, and 
 
 - `data/processed/characters_master.csv`: merged character database from the 3500 list, 7000 list, and corpus frequency file.
 - `data/processed/learning_characters.csv`: top 600 learning characters grouped by beginner/HSK-inspired bands.
+- `data/processed/common_3500_quick_reference.csv`: foreign-learner lookup sheet for the 3500 common characters.
+- `data/processed/common_3500_by_category.csv`: the same 3500 characters grouped by learner-friendly categories.
 - `content/lessons.json`: speaking-first lesson content.
+- `content/product_packs.json`: productized learning pack ideas and positioning.
 - `pdf/Chinese_Character_Content_Study_Pack.pdf`: printable study pack.
 - `pdf/Master_Character_List_Top_600.pdf`: printable top-600 character reference.
+- `pdf/Common_3500_Character_Quick_Reference.pdf`: pinyin-first 3500-character quick lookup PDF.
+- `pdf/Sellable_Learning_Packs.pdf`: sellable content-pack positioning sheet.
 - `docs/index.html`: GitHub Pages static website.
 
 ## Build

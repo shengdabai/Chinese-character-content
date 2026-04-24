@@ -12,9 +12,16 @@
     "data/processed/characters_master.csv",
     "data/processed/learning_characters.csv",
     "data/processed/lesson_vocabulary.csv",
+    "data/processed/common_3500_quick_reference.csv",
+    "data/processed/common_3500_by_category.csv",
     "content/lessons.json",
+    "content/product_packs.json",
     "pdf/Chinese_Character_Content_Study_Pack.pdf",
     "pdf/Master_Character_List_Top_600.pdf",
-    "docs/index.html"
+    "pdf/Common_3500_Character_Quick_Reference.pdf",
+    "pdf/Sellable_Learning_Packs.pdf",
+    "docs/index.html",
+    "docs/common-3500.html",
+    "docs/packs.html"
   ]
 }
