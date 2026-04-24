@@ -107,6 +107,46 @@ LOOKUP_CATEGORIES = {
 }
 
 
+EXAMPLE_WORD_OVERRIDES = {
+    "我": ("我们", "我的", "自我"),
+    "你": ("你好", "你们", "你的"),
+    "他": ("他们", "他的", "他人"),
+    "她": ("她们", "她的"),
+    "是": ("不是", "可是", "总是"),
+    "有": ("没有", "有用", "有名"),
+    "不": ("不是", "不好", "不用"),
+    "会": ("会议", "开会", "会说"),
+    "说": ("说话", "说明", "小说"),
+    "学": ("学生", "学校", "学习"),
+    "中": ("中国", "中文", "中间"),
+    "国": ("中国", "美国", "国家"),
+    "人": ("人们", "中国人", "个人"),
+    "名": ("名字", "有名", "名单"),
+    "字": ("名字", "汉字", "文字"),
+    "电": ("电话", "电脑", "电梯"),
+    "话": ("电话", "说话", "对话"),
+    "工": ("工作", "工人", "工资"),
+    "作": ("工作", "作业", "合作"),
+    "公": ("公司", "办公室", "公共"),
+    "司": ("公司", "司机", "司法"),
+    "商": ("商务", "商店", "商量"),
+    "钱": ("付钱", "价钱", "赚钱"),
+    "价": ("价格", "价钱", "评价"),
+    "安": ("安全", "安排", "平安"),
+    "爱": ("爱好", "可爱", "热爱"),
+    "吃": ("吃饭", "好吃", "吃完"),
+    "喝": ("喝水", "喝茶", "吃喝"),
+    "走": ("走路", "走开", "走进"),
+    "来": ("回来", "进来", "来到"),
+    "去": ("出去", "回去", "去年"),
+    "时": ("时间", "小时", "同时"),
+    "间": ("时间", "房间", "中间"),
+    "天": ("今天", "明天", "天气"),
+    "月": ("这个月", "下个月", "月亮"),
+    "年": ("今年", "去年", "年轻"),
+}
+
+
 LESSONS = [
     {
         "level": "Zero Beginner",
@@ -476,12 +516,13 @@ def download_cedict() -> Path | None:
         return None
 
 
-def load_cedict() -> tuple[dict[str, str], dict[str, str]]:
+def load_cedict() -> tuple[dict[str, str], dict[str, str], list[dict[str, str]]]:
     path = download_cedict()
     pinyin_map: dict[str, str] = {}
     definition_map: dict[str, str] = {}
+    entries: list[dict[str, str]] = []
     if not path:
-        return pinyin_map, definition_map
+        return pinyin_map, definition_map, entries
 
     line_re = re.compile(r"^(\S+)\s+(\S+)\s+\[([^\]]+)\]\s+/(.+)/$")
     with path.open("r", encoding="utf-8") as handle:
@@ -497,10 +538,72 @@ def load_cedict() -> tuple[dict[str, str], dict[str, str]]:
             )
             if not clean_defs:
                 continue
+            entries.append({"text": simplified, "pinyin": pinyin, "definition": clean_defs})
             if simplified not in definition_map:
                 definition_map[simplified] = clean_defs
                 pinyin_map[simplified] = pinyin
-    return pinyin_map, definition_map
+    return pinyin_map, definition_map, entries
+
+
+def build_example_words(entries: list[dict[str, str]], characters: set[str]) -> dict[str, str]:
+    examples: dict[str, list[str]] = {character: [] for character in characters}
+    for char, words in EXAMPLE_WORD_OVERRIDES.items():
+        if char in examples:
+            examples[char].extend(f"{word} ({sentence_pinyin(word)})" for word in words[:3])
+    blocked_definition_terms = (
+        "variant of",
+        "old variant",
+        "archaic variant",
+        "surname",
+        "abbr.",
+        "abbr for",
+        "see ",
+        "used in",
+        "county",
+        "district",
+        "city",
+        "province",
+        "prefecture",
+        "township",
+        "village",
+        "river",
+        "mountain",
+        "book of",
+        "old name",
+        "place name",
+        "personal name",
+        "transliteration",
+        "loanword",
+    )
+    blocked_text_fragments = ("县", "区", "市", "省", "镇", "乡", "村", "路", "州", "书", "记")
+    candidates: list[tuple[int, str, str]] = []
+    for entry in entries:
+        text = entry["text"]
+        if not 2 <= len(text) <= 4:
+            continue
+        if not all(re.match(r"[\u4e00-\u9fff]", char) for char in text):
+            continue
+        definition = entry["definition"].lower()
+        if any(term in definition for term in blocked_definition_terms):
+            continue
+        if any(fragment in text for fragment in blocked_text_fragments) and len(text) >= 3:
+            continue
+        # Prefer short, reusable words over idioms and proper-name-like entries.
+        score = len(text)
+        if len(text) == 2:
+            score = 0
+        elif len(text) == 3:
+            score = 2
+        candidates.append((score, text, entry["definition"]))
+
+    for _score, text, _definition in sorted(candidates, key=lambda item: (item[0], len(item[1]), item[1])):
+        for char in set(text):
+            if char not in examples or len(examples[char]) >= 3:
+                continue
+            example = f"{text} ({sentence_pinyin(text)})"
+            if example not in examples[char]:
+                examples[char].append(example)
+    return {char: "; ".join(words) for char, words in examples.items()}
 
 
 def pinyin_for(text: str, cedict_pinyin: dict[str, str] | None = None) -> str:
@@ -616,12 +719,18 @@ def lookup_category(character: str, definition: object) -> str:
     return "General Reference"
 
 
-def enrich_characters(df: pd.DataFrame, cedict_pinyin: dict[str, str], cedict_defs: dict[str, str]) -> pd.DataFrame:
+def enrich_characters(
+    df: pd.DataFrame,
+    cedict_pinyin: dict[str, str],
+    cedict_defs: dict[str, str],
+    example_words: dict[str, str],
+) -> pd.DataFrame:
     df = df.copy()
     df["pinyin"] = df["character"].map(lambda char: pinyin_for(char, cedict_pinyin))
     df["pinyin_plain"] = df["character"].map(plain_pinyin)
     df["pinyin_initial"] = df["pinyin_plain"].str[:1].str.upper()
     df["definition_en"] = df["character"].map(lambda char: cedict_defs.get(char, ""))
+    df["example_words"] = df["character"].map(lambda char: example_words.get(char, ""))
     df["learning_band"] = df["frequency_rank"].map(assign_band)
     df["frequency_tier"] = df["frequency_rank"].map(frequency_tier)
     df["lookup_category"] = df.apply(lambda row: lookup_category(row["character"], row["definition_en"]), axis=1)
@@ -643,6 +752,7 @@ def enrich_characters(df: pd.DataFrame, cedict_pinyin: dict[str, str], cedict_de
         "pinyin_plain",
         "pinyin_initial",
         "definition_en",
+        "example_words",
         "lookup_category",
         "frequency_tier",
         "learning_band",
@@ -909,17 +1019,18 @@ def build_common_3500_pdf(master: pd.DataFrame) -> None:
     ]
     for initial, group in common.groupby("pinyin_initial", sort=True):
         story.append(p(str(initial), st["h1"]))
-        rows = [["字", "Pinyin", "English", "Category", "Freq"]] + [
+        rows = [["字", "Pinyin", "English", "Examples", "Category", "Freq"]] + [
             [
                 row.character,
                 row.pinyin,
-                str(row.definition_en)[:105],
+                str(row.definition_en)[:80],
+                str(row.example_words)[:58],
                 row.lookup_category,
                 "" if pd.isna(row.frequency_rank) else int(row.frequency_rank),
             ]
             for row in group.itertuples()
         ]
-        add_table(story, rows, [12 * mm, 30 * mm, 82 * mm, 36 * mm, 14 * mm], st["small"])
+        add_table(story, rows, [11 * mm, 25 * mm, 61 * mm, 45 * mm, 27 * mm, 10 * mm], st["small"])
     doc.build(story)
 
 
@@ -1105,12 +1216,50 @@ tbody tr:nth-child(even) { background: #f8fafb; }
   font-size: 12px;
 }
 .pack-meta { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+.finder-tools {
+  position: sticky;
+  top: 58px;
+  z-index: 5;
+  background: rgba(251,252,253,0.97);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 18px 0;
+}
+.finder-row { display: grid; grid-template-columns: 1.4fr 0.8fr; gap: 10px; }
+.finder-tools input, .finder-tools select {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font: inherit;
+  background: white;
+}
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.filters button {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 7px 10px;
+  color: var(--ink);
+  background: white;
+  cursor: pointer;
+}
+.filters button.active { color: white; background: var(--accent-dark); border-color: var(--accent-dark); }
+.finder-count { color: var(--muted); margin: 10px 0 0; font-size: 14px; }
+.finder-section { margin: 14px 0; border: 1px solid var(--line); border-radius: 8px; background: white; }
+.finder-section summary { cursor: pointer; padding: 13px 16px; font-weight: 760; color: var(--accent-dark); }
+.finder-section table { margin: 0; border-left: 0; border-right: 0; border-bottom: 0; }
+.char-row.hidden { display: none; }
+.examples { color: var(--muted); font-size: 13px; }
 @media (max-width: 760px) {
   .topbar { align-items: flex-start; flex-direction: column; }
   .hero { grid-template-columns: 1fr; }
   main { padding: 24px 14px 42px; }
   table { font-size: 13px; }
   th, td { padding: 7px; }
+  .finder-tools { top: 104px; }
+  .finder-row { grid-template-columns: 1fr; }
 }
 """
     (SITE / "assets" / "styles.css").write_text(css, encoding="utf-8")
@@ -1181,28 +1330,97 @@ tbody tr:nth-child(even) { background: #f8fafb; }
         f"<a href='#{html.escape(initial)}'>{html.escape(initial)}</a>"
         for initial in common_3500["pinyin_initial"].dropna().drop_duplicates()
     )
+    category_options = "\n".join(
+        f"<option value='{html.escape(category)}'>{html.escape(category)}</option>"
+        for category in sorted(common_3500["lookup_category"].dropna().unique())
+    )
     groups = []
     for initial, group in common_3500.groupby("pinyin_initial", sort=True):
         rows = "\n".join(
-            f"<tr><td class='han'>{html.escape(row.character)}</td><td>{html.escape(row.pinyin)}</td><td>{html.escape(str(row.definition_en)[:180])}</td><td>{html.escape(row.lookup_category)}</td><td>{'' if pd.isna(row.frequency_rank) else int(row.frequency_rank)}</td><td>{int(row.rank_3500)}</td></tr>"
+            f"""<tr class="char-row" data-search="{html.escape(' '.join([row.character, row.pinyin, row.pinyin_plain, str(row.definition_en), str(row.example_words), row.lookup_category]).lower())}" data-category="{html.escape(row.lookup_category)}" data-rank="{'' if pd.isna(row.frequency_rank) else int(row.frequency_rank)}">
+              <td class='han'>{html.escape(row.character)}</td>
+              <td>{html.escape(row.pinyin)}</td>
+              <td>{html.escape(str(row.definition_en)[:180])}</td>
+              <td class="examples">{html.escape(str(row.example_words))}</td>
+              <td>{html.escape(row.lookup_category)}</td>
+              <td>{'' if pd.isna(row.frequency_rank) else int(row.frequency_rank)}</td>
+              <td>{int(row.rank_3500)}</td>
+            </tr>"""
             for row in group.itertuples()
         )
         groups.append(
             f"""
-            <section id="{html.escape(initial)}">
-              <h2>{html.escape(initial)}</h2>
+            <details class="finder-section" id="{html.escape(initial)}" open>
+              <summary>{html.escape(initial)}</summary>
               <table>
-                <thead><tr><th>字</th><th>Pinyin</th><th>English</th><th>Category</th><th>Freq</th><th>3500</th></tr></thead>
+                <thead><tr><th>字</th><th>Pinyin</th><th>English</th><th>Examples</th><th>Category</th><th>Freq</th><th>3500</th></tr></thead>
                 <tbody>{rows}</tbody>
               </table>
-            </section>
+            </details>
             """
         )
     common_body = f"""
     <h1>3500 Character Finder</h1>
-    <p class="lead">A pinyin-first quick reference for foreign learners. Use the browser's find command to search by character, pinyin, English meaning, or category.</p>
+    <p class="lead">A pinyin-first quick reference for foreign learners. Search by character, pinyin, English meaning, category, or example word.</p>
+    <section class="finder-tools" aria-label="3500 character filters">
+      <div class="finder-row">
+        <input id="finderSearch" type="search" placeholder="Search: ni hao, meeting, 我, business..." autocomplete="off">
+        <select id="categoryFilter">
+          <option value="all">All categories</option>
+          {category_options}
+        </select>
+      </div>
+      <div class="filters" aria-label="Frequency filters">
+        <button type="button" class="active" data-rank="all">All 3500</button>
+        <button type="button" data-rank="100">Top 100</button>
+        <button type="button" data-rank="300">Top 300</button>
+        <button type="button" data-rank="600">Top 600</button>
+        <button type="button" data-rank="1200">Top 1200</button>
+        <button type="button" data-rank="2500">Top 2500</button>
+      </div>
+      <p class="finder-count"><span id="visibleCount">3500</span> of 3500 characters shown</p>
+    </section>
     <div class="anchors">{anchors}</div>
     {''.join(groups)}
+    <script>
+      const rows = Array.from(document.querySelectorAll('.char-row'));
+      const searchInput = document.getElementById('finderSearch');
+      const categoryFilter = document.getElementById('categoryFilter');
+      const count = document.getElementById('visibleCount');
+      let rankLimit = 'all';
+
+      function applyFilters() {{
+        const query = searchInput.value.trim().toLowerCase();
+        const category = categoryFilter.value;
+        let visible = 0;
+        rows.forEach((row) => {{
+          const rank = Number(row.dataset.rank || 999999);
+          const matchesSearch = !query || row.dataset.search.includes(query);
+          const matchesCategory = category === 'all' || row.dataset.category === category;
+          const matchesRank = rankLimit === 'all' || rank <= Number(rankLimit);
+          const show = matchesSearch && matchesCategory && matchesRank;
+          row.classList.toggle('hidden', !show);
+          if (show) visible += 1;
+        }});
+        document.querySelectorAll('.finder-section').forEach((section) => {{
+          const hasVisible = Boolean(section.querySelector('.char-row:not(.hidden)'));
+          section.style.display = hasVisible ? '' : 'none';
+          if (query || category !== 'all' || rankLimit !== 'all') section.open = true;
+        }});
+        count.textContent = String(visible);
+      }}
+
+      searchInput.addEventListener('input', applyFilters);
+      categoryFilter.addEventListener('change', applyFilters);
+      document.querySelectorAll('[data-rank]').forEach((button) => {{
+        button.addEventListener('click', () => {{
+          rankLimit = button.dataset.rank;
+          document.querySelectorAll('[data-rank]').forEach((item) => item.classList.remove('active'));
+          button.classList.add('active');
+          applyFilters();
+        }});
+      }});
+    </script>
 """
     (SITE / "common-3500.html").write_text(html_page("3500 Character Finder", common_body), encoding="utf-8")
 
@@ -1310,9 +1528,10 @@ def write_summary(master: pd.DataFrame, lessons: list[dict[str, object]]) -> Non
 
 def main() -> None:
     ensure_dirs()
-    cedict_pinyin, cedict_defs = load_cedict()
+    cedict_pinyin, cedict_defs, cedict_entries = load_cedict()
     source = read_source_data()
-    master = enrich_characters(source, cedict_pinyin, cedict_defs)
+    example_words = build_example_words(cedict_entries, set(source["character"]))
+    master = enrich_characters(source, cedict_pinyin, cedict_defs, example_words)
     lessons = build_lessons(cedict_pinyin)
     export_data(master, lessons)
     build_study_pack(lessons)
