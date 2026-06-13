@@ -4,20 +4,20 @@ Open Chinese character learning datasets for English speakers — 3500/7000 list
 
 ## Business Context
 
-- **Category:** security and governance tool
-- **Audience:** builders and operators who need safer repositories, cleaner handoffs, and repeatable security checks.
+- **Category:** education product
+- **Audience:** learners, teachers, parents, and education operators who need a clearer learning or exam-prep workflow.
 - **Repository status:** Public repository. Keep examples, docs, and issues free of credentials, private data, and machine-specific paths.
 - **Topics:** anki, chinese-characters, chinese-learning, dataset, hsk, language-learning, mandarin, open-data, pinyin
 
 ## What This Project Is For
 
 - Open Chinese character learning datasets for English speakers — 3500/7000 lists + corpus frequency, pinyin, HSK 1-3 bands (CSV/JSON).
-- Find repository risks early without exposing secrets in reports.
-- Make security review repeatable across public and private codebases.
+- Give users a concrete learning workflow instead of a loose collection of content.
+- Make practice, feedback, review, or recommendation steps easier to repeat.
 
 ## Where It Fits
 
-This repository belongs in the trust-and-safety layer of the workbench: it helps make code, configuration, and public handoffs safer before they are reused or shown to clients.
+This repository supports productized learning workflows: diagnostic input, guided practice, review loops, and clearer handoff between learner, teacher, and software.
 
 ## Technical Overview
 
